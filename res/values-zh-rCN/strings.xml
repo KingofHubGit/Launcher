@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">XGD主页</string>
+    <string name="load_init_info">正在初始化数据...</string>
+    <string name="home_title_tv">电视</string>
+    <string name="home_title_movie">电影</string>
+    <string name="home_title_game">游戏</string>
+    <string name="home_title_mall">安卓商城</string>
+    <string name="home_title_app">应用</string>
+    <string name="home_title_set">系统</string>
+    <string name="on_app">未找到数据模块！</string>
+    <string name="on_add_app">应用快捷键已存在，无需添加.</string>
+    <string name="on_app_delete">未找到删除的应用快捷键！</string>
+    <string name="remove_device">外部设备被移除</string>
+    <string name="dialog_nonetwork_title">网络提示</string>
+    <string name="dialog_nonetwork_msg">网络已断开，是否配置网络？</string>
+    <string name="dialog_ok">确   定</string>
+    <string name="dialog_cancel">取   消</string>
+
+    <!-- Weather -->
+    <string name="city_automatic">自动获取</string>
+    <string name="city_manual">手动配置</string>
+    <string name="set_city">配置城市</string>
+    <string name="city_load">正在获取城市信息...</string>
+    <string name="city_error">获取城市信息有误，请手动配置城市.</string>
+    <string name="city_new">城市：</string>
+    <string name="choose_city">选择城市</string>
+    <string name="hot_city">热门城市</string>
+    <string name="shengfen">省份</string>
+    <string name="diqu">地区</string>
+    <string name="city">北京</string>
+    <string name="city_sheng">省</string>
+    <string name="city_shi">市</string>
+    <string name="city_str">来自：</string>
+   
+
+    <!-- 商城 -->
+    <string name="mall_title_1">热门推荐</string>
+    <string name="mall_title_2">影视点播</string>
+    <string name="mall_title_3">音乐K歌</string>
+    <string name="mall_title_4">家庭娱乐</string>
+    <string name="mall_title_5">健康生活</string>
+    <string name="mall_title_6">游    戏</string>
+    <string name="mall_title_7">儿童天地</string>
+
+    <!-- 应用 -->
+
+    <string name="app_title_add">添加应用</string>
+    <string name="app_title_all">所有应用</string>
+    <string name="app_title_add_">添加应用快捷键</string>
+    <string name="app_title_update">更新应用快捷键</string>
+    <string name="app_title_delete">删除应用快捷键</string>
+    <string name="app_title_szie">应用个数:  </string>
+
+    <!-- 设置 -->
+    <string name="system_title_setting">设  置</string>
+    <string name="system_title_update">升  级</string>
+    <string name="system_title_download">下  载</string>
+    <string name="system_title_soft">软  件</string>
+    <string name="system_title_guide">用户指南</string>
+
+    <!-- 软件管理 -->
+    <string name="apps_runing">正在运行</string>
+    <string name="soft_move">软件搬家</string>
+    <string name="soft_remove">软件卸载</string>
+    <string name="cancel">取消</string>
+    <string name="app_clean">停止</string>
+    <string name="move_tosd">移至SD卡</string>
+    <string name="move_tosding">正在移动..</string>
+    <string name="uninstall_text">卸载</string>
+    <string name="uninstalling">正在卸载...</string>
+
+</resources>
