@@ -1,4 +1,4 @@
-package com.xgd.launcher;
+package com.android.launcher2;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.GridView;

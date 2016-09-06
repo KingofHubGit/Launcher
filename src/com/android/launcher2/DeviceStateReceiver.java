@@ -1,4 +1,4 @@
-package com.xgd.launcher;
+package com.android.launcher2;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

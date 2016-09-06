@@ -15,7 +15,7 @@
         android:layout_centerHorizontal="true"/>
     <!-- android:paddingTop="20dp" -->
 
-    <com.xgd.launcher.PageIndicator
+    <com.android.launcher2.PageIndicator
         android:id="@+id/pageindicator_"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

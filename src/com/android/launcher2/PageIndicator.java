@@ -1,6 +1,7 @@
-package com.xgd.launcher;
+package com.android.launcher2;
 
-import com.xgd.launcher.R;
+
+import com.android.launcher.R;
 
 import android.content.Context;
 import android.graphics.Bitmap;

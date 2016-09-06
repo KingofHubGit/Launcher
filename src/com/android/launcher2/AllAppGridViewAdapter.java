@@ -1,10 +1,11 @@
-package com.xgd.launcher;
+package com.android.launcher2;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.xgd.launcher.R;
-import com.xgd.launcher.AppItem;
+import com.android.launcher.R;
+import com.android.launcher2.AppItem;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;

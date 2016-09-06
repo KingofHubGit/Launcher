@@ -1,15 +1,16 @@
-package com.xgd.launcher;
+package com.android.launcher2;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.xgd.launcher.R;
-import com.xgd.launcher.AllAppGridView;
-import com.xgd.launcher.AllAppGridViewAdapter;
-import com.xgd.launcher.AllAppViewPagerAdapter;
-import com.xgd.launcher.PageIndicator;
-import com.xgd.launcher.AppItem;
+import com.android.launcher.R;
+import com.android.launcher2.AllAppGridView;
+import com.android.launcher2.AllAppGridViewAdapter;
+import com.android.launcher2.AllAppViewPagerAdapter;
+import com.android.launcher2.AppItem;
+import com.android.launcher2.PageIndicator;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.WallpaperManager;
@@ -44,7 +45,7 @@ import android.widget.AdapterView.OnItemSelectedListener;
  * @data 2016-4-20
  * @author guoxiao
  */
-public class AllAppActivity extends Activity implements 
+public class Launcher extends Activity implements 
 OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, OnItemLongClickListener{
 	
 	private AllAppGridViewAdapter mGridViewAdapter;

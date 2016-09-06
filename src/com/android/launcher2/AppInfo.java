@@ -1,56 +1,39 @@
-package com.xgd.launcher;
+package com.android.launcher2;
+
 import android.graphics.drawable.Drawable;
 
-public class AppItem{
-
-	private int appPosition = 0;
+public class AppInfo{  
+	
 	private String appName = null;
-	private Drawable appIcon = null;
+	private Drawable icon = null;
 	private String packageName = null;
 	private String className = null;
-	
-
-	public int getAppPosition() {
-		return appPosition;
-	}
-
-	public void setAppPosition(int position) {
-		this.appPosition = position;
-	}
-
 	
 	public String getAppName() {
 		return appName;
 	}
-
 	public void setAppName(String appName) {
 		this.appName = appName;
 	}
-
-	public Drawable getAppIcon() {
-		return appIcon;
+	public Drawable getIcon() {
+		return icon;
 	}
-
-	public void setAppIcon(Drawable icon) {
-		this.appIcon = icon;
+	public void setIcon(Drawable icon) {
+		this.icon = icon;
 	}
-
 	public String getPackageName() {
 		return packageName;
 	}
-
 	public void setPackageName(String packageName) {
 		this.packageName = packageName;
 	}
-
 	public String getClassName() {
 		return className;
 	}
-
 	public void setClassName(String className) {
 		this.className = className;
 	}
+
 	
-
-
 }
+
