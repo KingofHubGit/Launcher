@@ -5,10 +5,12 @@ import java.util.Collections;
 import java.util.List;
 
 import com.android.launcher.R;
+import com.android.launcher2.AllAppGridView;
+import com.android.launcher2.AllAppGridViewAdapter;
+import com.android.launcher2.AllAppViewPagerAdapter;
 import com.android.launcher2.AppItem;
 import com.android.launcher2.PageIndicator;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.WallpaperManager;
@@ -21,7 +23,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -41,30 +42,32 @@ import android.widget.AdapterView.OnItemSelectedListener;
 
 /** 
  * 
- * @data 2016-4-20
+ * @data 2016-9-7 backup
  * @author guoxiao
  */
-public class Launcher extends Activity implements 
+public class AllAppAcitivity extends Activity implements 
 OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, OnItemLongClickListener{
 	
-	private XGDAllAppGridViewAdapter mGridViewAdapter;
-	private XGDAllAppViewPagerAdapter adapter;
-	private List<XGDAllAppGridView> mLists;
+	private AllAppGridViewAdapter mGridViewAdapter;
+	private AllAppViewPagerAdapter adapter;
+	private List<AllAppGridView> mLists;
 	private ViewPager mViewPager;
 	private List<AppItem> appList = new ArrayList<AppItem>();	
 	private int mPageindex = 0;
-	private final int NUM_COLUMNS = 2;
+	private final int NUM_COLUMNS = 4; 
+	private PageIndicator pi;
 	private BitmapDrawable mBitmapDrawable = null;
 	private static final String FLASH_PLAYER = "com.adobe.flashplayer";
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.xgd_all_app);
-		mViewPager = (ViewPager) findViewById(R.id.app_all_viewpager);
+		setContentView(R.layout.yellow_all_app);
+		pi = (PageIndicator)findViewById(R.id.pageindicator_);
+		mViewPager = (ViewPager) findViewById(R.id.app_all_viewpager_);
 		mViewPager.setOnPageChangeListener(this);
 		onCreateAppView();
-//		setBackground();
+		setBackground();
 		IntentFilter filter = new IntentFilter();
 		filter.addAction(Intent.ACTION_PACKAGE_ADDED);
 		filter.addAction(Intent.ACTION_PACKAGE_REMOVED);
@@ -91,9 +94,11 @@ OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, OnItemLongClic
         layout.setBackgroundDrawable(mBitmapDrawable);
 	}
 	
+	
+	
 	@Override
 	protected void onResume() {
-		//setBackground();
+		setBackground();
 		super.onResume();
 	}
 
@@ -134,27 +139,25 @@ OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, OnItemLongClic
 	            		appInfo.setPackageName(packageName);
 	    				appInfo.setClassName(className);
 	    				appInfo.setAppName((String) reInfo.loadLabel(pm));
-//	    				appInfo.setAppIcon(reInfo.loadIcon(pm));
-	    				appInfo.setAppIcon(getBaseContext().getResources().getDrawable(R.drawable.ic_calculate));
+	    				appInfo.setAppIcon(reInfo.loadIcon(pm));
 	    				appList.add(appInfo);	
 	        		}            		
 	        	}  
 	        }
-	        int pageSize = getResources().getInteger(R.integer.xgd_config_page_size);
+	        int pageSize = getResources().getInteger(R.integer.config_page_size);
 			final int PageCount = (int) Math.ceil(appList.size() / (float)pageSize);
 			//Log.i("app", "�ܹ�" + PageCount + "ҳ");
-			mLists = new ArrayList<XGDAllAppGridView>();
+			mLists = new ArrayList<AllAppGridView>();
 
 			for (int i = 0; i < PageCount; i++) {
-				XGDAllAppGridView gv = new XGDAllAppGridView(this);
-				mGridViewAdapter =new XGDAllAppGridViewAdapter(this, appList, i);
+				AllAppGridView gv = new AllAppGridView(this);
+				mGridViewAdapter =new AllAppGridViewAdapter(this, appList, i);
 				gv.setAdapter(mGridViewAdapter);
 				gv.setClickable(true);
 				gv.setFocusable(true);			
 				gv.setNumColumns(NUM_COLUMNS);
 				gv.setHorizontalSpacing(-15);
 				gv.setVerticalSpacing(-12);
-				gv.setVerticalScrollBarEnabled(false);
 				//gv.setSelector(R.drawable.item_bg_selected2);
 				gv.setOnItemClickListener(this);
 				gv.setOnItemLongClickListener(this);
@@ -162,8 +165,10 @@ OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, OnItemLongClic
 				gv.invalidate();
 				mLists.add(gv);
 			}
+			 pi.setTotalPage(PageCount);
+		     pi.setCurrentPage(mPageindex);
 		     
-			adapter = new XGDAllAppViewPagerAdapter(this, mLists);
+			adapter = new AllAppViewPagerAdapter(this, mLists);
 			mViewPager.setAdapter(adapter);
 			mViewPager.invalidate();
 	}
@@ -180,12 +185,13 @@ OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, OnItemLongClic
 	@Override
 	public void onPageSelected(int index) {
 		mPageindex = index;
+		pi.setCurrentPage(index);
 	}
 
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
-		int pageSize = getResources().getInteger(R.integer.xgd_config_page_size);
+		int pageSize = getResources().getInteger(R.integer.config_page_size);
 		AppItem appInfo = (AppItem) appList.get(mPageindex * pageSize + position);
 		String packageName = appInfo.getPackageName();
 		String className = appInfo.getClassName();
@@ -207,7 +213,7 @@ OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, OnItemLongClic
 	@Override
 	public boolean onItemLongClick(AdapterView<?> parent, View view,
 			int position, long id) {
-		int pageSize = getResources().getInteger(R.integer.xgd_config_page_size);
+		int pageSize = getResources().getInteger(R.integer.config_page_size);
 		AppItem appInfo = (AppItem) appList.get(mPageindex * pageSize + position);
 		String packageName = appInfo.getPackageName();
         uninstall(packageName);
