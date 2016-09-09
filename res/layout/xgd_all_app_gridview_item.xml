@@ -2,7 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:gravity="center" >
+    android:gravity="center" 
+    >
 
     <FrameLayout
         android:id="@+id/xgd_all_app_grid_item_bg"
@@ -13,12 +14,12 @@
         >
         <ImageView
             android:id="@+id/xgd_all_app_grid_item_icon"
-            android:layout_width="@dimen/xgd_app_icon_size_width"
-            android:layout_height="@dimen/xgd_app_icon_size_height" />
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" />
     </FrameLayout>
     
     <FrameLayout
-        android:layout_width="@dimen/xgd_app_icon_size_width"
+        android:layout_width="@dimen/xgd_app_item_width"
         android:layout_height="wrap_content"
         android:layout_marginTop="115dp"
         >

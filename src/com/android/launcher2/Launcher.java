@@ -57,6 +57,29 @@ OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, OnItemLongClic
 	private BitmapDrawable mBitmapDrawable = null;
 	private static final String FLASH_PLAYER = "com.adobe.flashplayer";
 	
+	
+	/*
+	 * 
+	 * com.android.settings
+	  	com.android.deskclock
+		com.android.calculator2
+		com.xgd.update
+		com.android.quicksearchbox
+		com.android.music/com.android.music.VideoBrowserActivity
+		com.softwinner.explore
+		com.android.calendar
+		com.android.gallery3d
+		com.android.providers.downloads.ui
+		com.android.soundrecorder
+
+		com.android.camera2
+		com.android.music
+		com.android.chrome
+		com.xinguodu1.testpin
+		com.android.launcher
+	 */
+	
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -152,12 +175,13 @@ OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, OnItemLongClic
 				gv.setClickable(true);
 				gv.setFocusable(true);			
 				gv.setNumColumns(NUM_COLUMNS);
-				gv.setHorizontalSpacing(-15);
-				gv.setVerticalSpacing(-12);
+				gv.setHorizontalSpacing(5);
+				gv.setVerticalSpacing(5);
 				gv.setVerticalScrollBarEnabled(false);
 				//gv.setSelector(R.drawable.item_bg_selected2);
 				gv.setOnItemClickListener(this);
 				gv.setOnItemLongClickListener(this);
+				gv.setPadding(5, 0, 5, 0);
 				//gv.setOnItemSelectedListener(this);
 				gv.invalidate();
 				mLists.add(gv);
