@@ -8,6 +8,7 @@ public class AppItem{
 	private Drawable appIcon = null;
 	private String packageName = null;
 	private String className = null;
+	private String name = null;
 	private Drawable appBg = null;
 
 	public int getAppPosition() {
@@ -50,13 +51,17 @@ public class AppItem{
 	public void setClassName(String className) {
 		this.className = className;
 	}
-
+	
 	public Drawable getAppBg() {
 		return appBg;
 	}
 
 	public void setAppBg(Drawable appBg) {
 		this.appBg = appBg;
+	}
+
+	public String getName() {
+		return packageName + "_" + className;
 	}
 
 }

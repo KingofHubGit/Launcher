@@ -1,14 +1,13 @@
 package com.android.launcher2;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.android.launcher.R;
 import com.android.launcher2.AppItem;
-import com.android.launcher2.PageIndicator;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.WallpaperManager;
@@ -21,10 +20,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import android.content.res.Resources;
-import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
@@ -35,7 +31,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 
@@ -57,21 +52,47 @@ OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, OnItemLongClic
 	private BitmapDrawable mBitmapDrawable = null;
 	private static final String FLASH_PLAYER = "com.adobe.flashplayer";
 	
+	//List有顺序的，按顺序显示
+	private static List<String> systemAppList = new ArrayList<String>()
+	{
+		private static final long serialVersionUID = 1L;
+		{
+			add("com.android.settings_com.android.settings.Settings");
+			add("com.android.deskclock_com.android.deskclock.DeskClock");
+			add("com.android.calculator2_com.android.calculator2.Calculator");
+			add("com.xgd.update_com.xgd.update.UpdateActivity");
+			add("com.android.quicksearchbox_com.android.quicksearchbox.SearchActivity");
+			add("com.android.music_com.android.music.VideoBrowserActivity");
+			add("com.softwinner.explore_com.softwinner.explore.Main");
+			add("com.android.calendar_com.android.calendar.AllInOneActivity");
+			add("com.android.settings_com.android.settings.Settings$TetherSettingsActivity");
+			add("com.android.gallery3d_com.android.gallery3d.app.GalleryActivity");
+			add("com.android.providers.downloads.ui_com.android.providers.downloads.ui.DownloadList");
+			add("com.android.soundrecorder_com.android.soundrecorder.SoundRecorder");
+		}
+	};
+	
+	//MAP通过包名获取资源
+	private static Map<String, Integer> appMap = new HashMap<String, Integer>(){
+		private static final long serialVersionUID = 1L;
+		{
+		        put(("com.android.settings_com.android.settings.Settings"), R.drawable.ic_settings);
+		        put("com.android.deskclock_com.android.deskclock.DeskClock", R.drawable.ic_clock);
+		        put("com.android.calculator2_com.android.calculator2.Calculator", R.drawable.ic_calculate);
+		        put("com.xgd.update_com.xgd.update.UpdateActivity", R.drawable.ic_update);
+		        put("com.android.quicksearchbox_com.android.quicksearchbox.SearchActivity", R.drawable.ic_search);
+		        put("com.android.music_com.android.music.VideoBrowserActivity", R.drawable.ic_video);
+		        put("com.softwinner.explore_com.softwinner.explore.Main", R.drawable.ic_file);
+		        put("com.android.calendar_com.android.calendar.AllInOneActivity", R.drawable.ic_calendar);
+		        put("com.android.settings_com.android.settings.Settings$TetherSettingsActivity", R.drawable.ic_share_network);
+		        put("com.android.gallery3d_com.android.gallery3d.app.GalleryActivity", R.drawable.ic_gallery);
+		        put("com.android.providers.downloads.ui_com.android.providers.downloads.ui.DownloadList", R.drawable.ic_download);
+		        put("com.android.soundrecorder_com.android.soundrecorder.SoundRecorder", R.drawable.ic_voice);
+		}
+	};
 	
 	/*
 	 * 
-	 * com.android.settings
-	  	com.android.deskclock
-		com.android.calculator2
-		com.xgd.update
-		com.android.quicksearchbox
-		com.android.music/com.android.music.VideoBrowserActivity
-		com.softwinner.explore
-		com.android.calendar
-		com.android.gallery3d
-		com.android.providers.downloads.ui
-		com.android.soundrecorder
-
 		com.android.camera2
 		com.android.music
 		com.android.chrome
@@ -94,6 +115,18 @@ OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, OnItemLongClic
 		filter.addAction(Intent.ACTION_PACKAGE_CHANGED);
 		filter.addDataScheme("package");
 		registerReceiver(mReceiver, filter);
+		
+		covertMapToArrayList();
+		
+	}
+	
+	public void covertMapToArrayList(){
+//		 HashMap<String, Integer> map = new HashMap<String, Integer>();
+		  ArrayList<Integer> list = new ArrayList<Integer>();
+		  for(String key : appMap.keySet()){
+		   list.add(appMap.get(key));
+		   Log.d("[gx]", "---------------- key:" + key);
+		  }
 	}
 	
 	@SuppressWarnings("deprecation")
@@ -145,8 +178,11 @@ OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, OnItemLongClic
 			PackageManager pm = getPackageManager(); 
 			Intent intent = new Intent(Intent.ACTION_MAIN, null);  
 			intent.addCategory(Intent.CATEGORY_LAUNCHER); 
+			List<AppItem> systemAList = new ArrayList<AppItem>();	
+			List<AppItem> userAppList = new ArrayList<AppItem>();	
+			
 	        List<ResolveInfo> resolveInfos = pm.queryIntentActivities(intent, 0);  
-	        Collections.sort(resolveInfos,new ResolveInfo.DisplayNameComparator(pm));  
+	        //Collections.sort(resolveInfos,new ResolveInfo.DisplayNameComparator(pm));  
 	        if (appList != null) {  
 	        	appList.clear();  
 	        	for (ResolveInfo reInfo : resolveInfos) {  
@@ -158,10 +194,22 @@ OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, OnItemLongClic
 	    				appInfo.setClassName(className);
 	    				appInfo.setAppName((String) reInfo.loadLabel(pm));
 //	    				appInfo.setAppIcon(reInfo.loadIcon(pm));
-	    				appInfo.setAppIcon(getBaseContext().getResources().getDrawable(R.drawable.ic_calculate));
-	    				appList.add(appInfo);	
+	    				Log.i("[gx]", "packageName_className:" + packageName + "_"+ className);
+	    				if(appMap.get(appInfo.getName()) != null){
+	    					appInfo.setAppIcon(getBaseContext().getResources().getDrawable(appMap.get(appInfo.getName())));
+	    					systemAList.add(appInfo);
+	    				}else{
+	    					appInfo.setAppIcon(getBaseContext().getResources().getDrawable(R.drawable.bg_black));
+	    					userAppList.add(appInfo);
+	    				}
+	    					
 	        		}            		
-	        	}  
+	        	}
+
+	        	sortList(systemAList);
+	        	appList.addAll(systemAList);
+	        	appList.addAll(userAppList);
+	        	
 	        }
 	        int pageSize = getResources().getInteger(R.integer.xgd_config_page_size);
 			final int PageCount = (int) Math.ceil(appList.size() / (float)pageSize);
@@ -192,6 +240,23 @@ OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, OnItemLongClic
 			mViewPager.invalidate();
 	}
 	
+	private void sortList(List<AppItem> systemAList) {
+		List<AppItem> tmpList = new ArrayList<AppItem>();
+		tmpList.addAll(systemAList);
+		systemAList.clear();
+		if(systemAList != null){
+			for (String name : systemAppList) {
+				for(AppItem item: tmpList){
+					if(item.getName().equals(name)){
+						systemAList.add(item);
+						tmpList.remove(item);
+						break;
+					}
+				}
+			}
+		}
+	}
+
 	@Override
 	public void onPageScrollStateChanged(int arg0) {
 	}
