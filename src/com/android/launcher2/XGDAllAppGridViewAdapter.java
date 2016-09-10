@@ -66,14 +66,18 @@ public class XGDAllAppGridViewAdapter extends BaseAdapter {
 			holder = new ViewHolder();
 			convertView = mInflater.inflate(R.layout.xgd_all_app_gridview_item, null);
 			//holder.itemImgBg = (LinearLayout) convertView.findViewById(R.id.all_app_grid_item_bg);
-			holder.itemImg = (ImageView) convertView.findViewById(R.id.xgd_all_app_grid_item_icon);
+			holder.itemBg = (ImageView) convertView.findViewById(R.id.xgd_all_app_grid_item_icon);
+			holder.itemIcon = (ImageView) convertView.findViewById(R.id.xgd_app_item_icon);
 			holder.itemTitle = (TextView) convertView.findViewById(R.id.xgd_all_app_grid_item_name);
 			convertView.setTag(holder);
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
-		holder.itemImg.setBackground(item.getAppIcon());
+		holder.itemBg.setBackground(item.getAppBg());
 		holder.itemTitle.setText(item.getAppName());
+		if(item.getAppIcon() != null){
+			holder.itemIcon.setBackground(item.getAppIcon());
+		}
 		if (selected == position) {		
 			Animation animation = AnimationUtils.loadAnimation(mContext,R.anim.app_item_zoomout);
 			convertView.startAnimation(animation);
@@ -87,7 +91,8 @@ public class XGDAllAppGridViewAdapter extends BaseAdapter {
 
 	static class ViewHolder {
 		//public LinearLayout itemImgBg;
-		public ImageView itemImg;
+		public ImageView itemBg;
+		public ImageView itemIcon;
 		public TextView itemTitle;
 	}
 

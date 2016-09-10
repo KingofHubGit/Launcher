@@ -196,10 +196,11 @@ OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, OnItemLongClic
 //	    				appInfo.setAppIcon(reInfo.loadIcon(pm));
 	    				Log.i("[gx]", "packageName_className:" + packageName + "_"+ className);
 	    				if(appMap.get(appInfo.getName()) != null){
-	    					appInfo.setAppIcon(getBaseContext().getResources().getDrawable(appMap.get(appInfo.getName())));
+	    					appInfo.setAppBg(getBaseContext().getResources().getDrawable(appMap.get(appInfo.getName())));
 	    					systemAList.add(appInfo);
 	    				}else{
-	    					appInfo.setAppIcon(getBaseContext().getResources().getDrawable(R.drawable.bg_black));
+	    					appInfo.setAppBg(getBaseContext().getResources().getDrawable(R.drawable.bg_black));
+	    					appInfo.setAppIcon(reInfo.loadIcon(pm));
 	    					userAppList.add(appInfo);
 	    				}
 	    					

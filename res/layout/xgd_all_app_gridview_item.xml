@@ -16,7 +16,23 @@
             android:id="@+id/xgd_all_app_grid_item_icon"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent" />
+        
+        
     </FrameLayout>
+    
+    
+      <FrameLayout
+        android:layout_width="@dimen/xgd_app_item_width"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        >
+          <ImageView
+            android:id="@+id/xgd_app_item_icon"
+            android:layout_gravity="center"
+            android:layout_width="@dimen/xgd_app_icon_size_width"
+            android:layout_height="@dimen/xgd_app_icon_size_height" />
+        </FrameLayout>
+    
     
     <FrameLayout
         android:layout_width="@dimen/xgd_app_item_width"
