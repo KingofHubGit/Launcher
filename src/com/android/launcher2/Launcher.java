@@ -27,9 +27,12 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -44,7 +47,8 @@ OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, OnItemLongClic
 	
 	private XGDAllAppGridViewAdapter mGridViewAdapter;
 	private XGDAllAppViewPagerAdapter adapter;
-	private List<XGDAllAppGridView> mLists;
+	private View llFirstPage;
+	private List<View> mLists;
 	private ViewPager mViewPager;
 	private List<AppItem> appList = new ArrayList<AppItem>();	
 	private int mPageindex = 0;
@@ -107,6 +111,9 @@ OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, OnItemLongClic
 		setContentView(R.layout.xgd_all_app);
 		mViewPager = (ViewPager) findViewById(R.id.app_all_viewpager);
 		mViewPager.setOnPageChangeListener(this);
+		LayoutInflater inflater = (LayoutInflater)getSystemService(LAYOUT_INFLATER_SERVICE);       
+		llFirstPage = inflater.inflate(R.layout.apps_first_page, (ViewGroup)findViewById(R.id.ll_first_app_page));       
+		
 		onCreateAppView();
 //		setBackground();
 		IntentFilter filter = new IntentFilter();
@@ -215,10 +222,19 @@ OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, OnItemLongClic
 	        int pageSize = getResources().getInteger(R.integer.xgd_config_page_size);
 			final int PageCount = (int) Math.ceil(appList.size() / (float)pageSize);
 			//Log.i("app", "�ܹ�" + PageCount + "ҳ");
-			mLists = new ArrayList<XGDAllAppGridView>();
+			mLists = new ArrayList<View>();
 
 			for (int i = 0; i < PageCount; i++) {
-				XGDAllAppGridView gv = new XGDAllAppGridView(this);
+				
+				XGDAllAppGridView gv = null;
+				
+				if(i ==0){
+					//first page
+					gv = (XGDAllAppGridView)llFirstPage.findViewById(R.id.gv_first_app_page);
+				}else{
+					gv = new XGDAllAppGridView(this);
+				}
+				 
 				mGridViewAdapter =new XGDAllAppGridViewAdapter(this, appList, i);
 				gv.setAdapter(mGridViewAdapter);
 				gv.setClickable(true);
@@ -227,13 +243,22 @@ OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, OnItemLongClic
 				gv.setHorizontalSpacing(5);
 				gv.setVerticalSpacing(5);
 				gv.setVerticalScrollBarEnabled(false);
-				//gv.setSelector(R.drawable.item_bg_selected2);
+//				gv.setSelector(R.drawable.item_bg_selected2);
 				gv.setOnItemClickListener(this);
 				gv.setOnItemLongClickListener(this);
-				gv.setPadding(5, 0, 5, 0);
+				if(i == 0){
+					//第一页显示支付
+					gv.setPadding(5, 380, 5, 0);
+				}else{
+					gv.setPadding(5, 0, 5, 0);
+				}
 				//gv.setOnItemSelectedListener(this);
 				gv.invalidate();
-				mLists.add(gv);
+				if(i == 0){
+					mLists.add(llFirstPage);
+				}else{
+					mLists.add(gv);
+				}
 			}
 		     
 			adapter = new XGDAllAppViewPagerAdapter(this, mLists);
@@ -291,7 +316,7 @@ OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, OnItemLongClic
 	@Override
 	public void onItemSelected(AdapterView<?> parent, View view, int position,
 			long id) {
-		mLists.get(mPageindex).setCurrentPosition(position);
+		((XGDAllAppGridView)mLists.get(mPageindex)).setCurrentPosition(position);
 	}
 	
 	@Override

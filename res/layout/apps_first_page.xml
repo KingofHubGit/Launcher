@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:id="@+id/ll_first_app_page"
+     >
+     <FrameLayout 
+   		  android:layout_marginLeft="5px"
+          android:layout_marginRight="5px"
+          android:layout_width="@dimen/xgd_app_item_double_width"
+          android:layout_height="@dimen/xgd_app_item_height"
+    	 >
+         <ImageView
+            android:id="@+id/xgd_app_item_pay"
+            android:layout_gravity="center"
+             android:layout_width="wrap_content"
+   			 android:layout_height="wrap_content"
+            android:background="@drawable/ic_pay"
+             />
+     
+	  <TextView 
+	        android:id="@+id/tv_pay"
+            android:layout_marginTop="85dp"
+            android:layout_marginLeft="181dp"
+            android:text="@string/app_pay"
+             android:layout_width="wrap_content"
+   			 android:layout_height="wrap_content"
+	      />
+     </FrameLayout>
+     
+	  
+        <com.android.launcher2.XGDAllAppGridView
+            android:id="@+id/gv_first_app_page"
+             android:layout_width="wrap_content"
+   			 android:layout_height="wrap_content"
+            />
+</RelativeLayout>

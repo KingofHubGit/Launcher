@@ -7,9 +7,9 @@ import android.support.v4.view.ViewPager;
 import android.view.View;
 
 public class XGDAllAppViewPagerAdapter extends PagerAdapter {
-	private List<XGDAllAppGridView> mLists;
+	private List<View> mLists;
 
-	public XGDAllAppViewPagerAdapter(Context context, List<XGDAllAppGridView> array) {
+	public XGDAllAppViewPagerAdapter(Context context, List<View> array) {
 		this.mLists = array;
 	}
 

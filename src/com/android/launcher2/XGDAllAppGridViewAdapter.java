@@ -29,8 +29,13 @@ public class XGDAllAppGridViewAdapter extends BaseAdapter {
 		this.mContext = pContext;
 		mInflater = LayoutInflater.from(mContext);
 		int pageSize = pContext.getResources().getInteger(R.integer.xgd_config_page_size);
-		int i = page * pageSize;
+		int i = page * pageSize-2;
 		int end = i + pageSize;
+		//第一页只显示4个
+		if(page == 0){
+			i = 0;
+			end = 4;
+		}
 		while ((i < list.size()) && (i < end)) {
 			mList.add(list.get(i));
 			i++;

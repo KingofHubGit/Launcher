@@ -2,4 +2,5 @@
 <!-- Dynamic Grid -->
     <integer name="config_page_size">20</integer>
     <integer name="xgd_config_page_size">6</integer>
+    <integer name="xgd_config_first_page_size">4</integer>
 </resources>

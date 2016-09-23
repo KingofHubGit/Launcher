@@ -70,5 +70,6 @@
     <string name="move_tosding">正在移动..</string>
     <string name="uninstall_text">卸载</string>
     <string name="uninstalling">正在卸载...</string>
+    <string name="app_pay">收银</string>
 
 </resources>
