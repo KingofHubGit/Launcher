@@ -123,11 +123,11 @@ OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, OnItemLongClic
 		filter.addDataScheme("package");
 		registerReceiver(mReceiver, filter);
 		
-		covertMapToArrayList();
+		convertMapToArrayList();
 		
 	}
 	
-	public void covertMapToArrayList(){
+	public void convertMapToArrayList(){
 //		 HashMap<String, Integer> map = new HashMap<String, Integer>();
 		  ArrayList<Integer> list = new ArrayList<Integer>();
 		  for(String key : appMap.keySet()){
@@ -301,7 +301,9 @@ OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, OnItemLongClic
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
 		int pageSize = getResources().getInteger(R.integer.xgd_config_page_size);
-		AppItem appInfo = (AppItem) appList.get(mPageindex * pageSize + position);
+		//第一页四个item所以要减2
+		int itemIndex = mPageindex * pageSize + (mPageindex==0 ? position:position-2);
+		AppItem appInfo = (AppItem) appList.get(itemIndex);
 		String packageName = appInfo.getPackageName();
 		String className = appInfo.getClassName();
 		Intent mIntent = new Intent();
