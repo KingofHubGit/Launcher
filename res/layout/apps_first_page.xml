@@ -8,14 +8,18 @@
      <FrameLayout 
    		  android:layout_marginLeft="5px"
           android:layout_marginRight="5px"
+          android:clickable="true"
+          android:id="@+id/xgd_app_bg_pay"
+          android:background="@drawable/bg_top_red"
           android:layout_width="@dimen/xgd_app_item_double_width"
           android:layout_height="@dimen/xgd_app_item_height"
     	 >
          <ImageView
             android:id="@+id/xgd_app_item_pay"
             android:layout_gravity="center"
-             android:layout_width="wrap_content"
-   			 android:layout_height="wrap_content"
+            android:layout_marginRight="22dp"
+             android:layout_width="@dimen/xgd_app_icon_size_width"
+   			 android:layout_height="@dimen/xgd_app_icon_size_height"
             android:background="@drawable/ic_pay"
              />
      

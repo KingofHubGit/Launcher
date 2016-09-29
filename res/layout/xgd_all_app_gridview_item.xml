@@ -16,8 +16,6 @@
             android:id="@+id/xgd_all_app_grid_item_icon"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent" />
-        
-        
     </FrameLayout>
     
     
@@ -37,7 +35,7 @@
     <FrameLayout
         android:layout_width="@dimen/xgd_app_item_width"
         android:layout_height="wrap_content"
-        android:layout_marginTop="115dp"
+        android:layout_marginTop="113dp"
         >
     <TextView
             android:id="@+id/xgd_all_app_grid_item_name"
