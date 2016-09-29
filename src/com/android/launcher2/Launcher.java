@@ -61,36 +61,53 @@ OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, OnItemLongClic
 	private BitmapDrawable mBitmapDrawable = null;
 	private static final String FLASH_PLAYER = "com.adobe.flashplayer";
 	
+	private static int[] mBgCorlorArray = {
+			R.drawable.bg_purple,R.drawable.bg_blue, 	//1-2
+			R.drawable.bg_red,R.drawable.bg_green,   	//3-4
+			
+			R.drawable.bg_purple,R.drawable.bg_yellow, 	//5-6
+			R.drawable.bg_blue,R.drawable.bg_green,		//7-8
+			R.drawable.bg_yellow,R.drawable.bg_red,		//9-10
+			
+			R.drawable.bg_blue,R.drawable.bg_yellow,		//11-12
+			R.drawable.bg_green,R.drawable.bg_purple,		//13-14
+			R.drawable.bg_red,R.drawable.bg_green,			//15-16
+	};
+	
 	//MAP通过包名获取资源
 	private static Map<String, Integer[]> appMap = new HashMap<String, Integer[]>(){
 		private static final long serialVersionUID = 1L;
 		{
 		        put(("com.android.settings_com.android.settings.Settings"), new Integer[]
-		        		{1,R.drawable.bg_purple,R.drawable.ic_settings});
+		        		{1,R.drawable.ic_settings});
 		        put("com.android.deskclock_com.android.deskclock.DeskClock",new Integer[]
-		        		{2,R.drawable.bg_blue,R.drawable.ic_clock});
+		        		{2,R.drawable.ic_clock});
 		        put("com.android.calculator2_com.android.calculator2.Calculator", new Integer[]
-		        		{3,R.drawable.bg_red,R.drawable.ic_calculate});
+		        		{3,R.drawable.ic_calculate});
 		        put("com.xgd.update_com.xgd.update.UpdateActivity", new Integer[]
-		        		{4,R.drawable.bg_green,R.drawable.ic_update});
-		        put("com.android.quicksearchbox_com.android.quicksearchbox.SearchActivity", new Integer[]
-		        		{5,R.drawable.bg_purple, R.drawable.ic_search});
+		        		{4,R.drawable.ic_update});
+		        put("com.android.music_com.android.music.MusicBrowserActivity", new Integer[]
+		        		{5, R.drawable.ic_music});
 		        put("com.android.music_com.android.music.VideoBrowserActivity", new Integer[]
-		        		{6,R.drawable.bg_yellow, R.drawable.ic_video});
+		        		{6, R.drawable.ic_video});
 		        put("com.softwinner.explore_com.softwinner.explore.Main", new Integer[]
-		        		{7,R.drawable.bg_blue, R.drawable.ic_file});
+		        		{7, R.drawable.ic_file});
 		        put("com.android.calendar_com.android.calendar.AllInOneActivity", new Integer[]
-		        		{8,R.drawable.bg_purple, R.drawable.ic_calendar});
-		        put("com.android.settings_com.android.settings.Settings$TetherSettingsActivity", new Integer[]
-		        		{9,R.drawable.bg_yellow, R.drawable.ic_share_network});
+		        		{8, R.drawable.ic_calendar});
+		        put("com.android.camera2_com.android.camera.CameraLauncher", new Integer[]
+		        		{9, R.drawable.ic_camera});
 		        put("com.android.gallery3d_com.android.gallery3d.app.GalleryActivity", new Integer[]
-		        		{10,R.drawable.bg_red, R.drawable.ic_gallery});
+		        		{10, R.drawable.ic_gallery});
 		        put("com.android.providers.downloads.ui_com.android.providers.downloads.ui.DownloadList", new Integer[]
-		        		{11,R.drawable.bg_blue, R.drawable.ic_download});
+		        		{11, R.drawable.ic_download});
 		        put("com.android.soundrecorder_com.android.soundrecorder.SoundRecorder", new Integer[]
-		        		{12,R.drawable.bg_yellow, R.drawable.ic_voice});
+		        		{12, R.drawable.ic_voice});
 		        put("com.xgd.ophelp_com.xgd.ophelp.MainActivity", new Integer[]
-		        		{13,R.drawable.bg_green, R.drawable.ic_help});
+		        		{13, R.drawable.ic_help});
+		        put("com.android.quicksearchbox_com.android.quicksearchbox.SearchActivity", new Integer[]
+		        		{14, R.drawable.ic_search});
+		        put("com.android.settings_com.android.settings.Settings$TetherSettingsActivity", new Integer[]
+		        		{15, R.drawable.ic_share_network});
 		        
 		}
 	};
@@ -160,11 +177,11 @@ OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, OnItemLongClic
 	    				appInfo.setClassName(className);
 	    				appInfo.setAppName((String) reInfo.loadLabel(pm));
 //	    				appInfo.setAppIcon(reInfo.loadIcon(pm));
-//	    				Log.i("[gx]", "packageName_className:" + packageName + "_"+ className);
+	    				Log.i("[gx]", "packageName_className:" + packageName + "_"+ className);
 	    				if(appMap.get(appInfo.getName()) != null){
 	    					appInfo.setAppPosition(appMap.get(appInfo.getName())[0].intValue());
-	    					appInfo.setAppBg(getBaseContext().getResources().getDrawable(appMap.get(appInfo.getName())[1]));
-	    					appInfo.setAppIcon(getBaseContext().getResources().getDrawable(appMap.get(appInfo.getName())[2]));
+	    					appInfo.setAppBg(getBaseContext().getResources().getDrawable(mBgCorlorArray[appInfo.getAppPosition()-1]));
+	    					appInfo.setAppIcon(getBaseContext().getResources().getDrawable(appMap.get(appInfo.getName())[1]));
 	    					systemAList.add(appInfo);
 	    				}else{
 	    					appInfo.setAppBg(getBaseContext().getResources().getDrawable(R.drawable.bg_gray));
