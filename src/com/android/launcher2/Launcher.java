@@ -10,9 +10,9 @@ import java.util.Map;
 import com.android.launcher.R;
 import com.android.launcher2.AppItem;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.WallpaperManager;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -35,17 +35,16 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.Toast;
 
 /** 
  * 
  * @data 2016-4-20
  * @author guoxiao
  */
+@SuppressLint("ShowToast")
 public class Launcher extends Activity implements 
 OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, OnItemLongClickListener, android.view.View.OnClickListener{
 	
@@ -58,7 +57,6 @@ OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, OnItemLongClic
 	private List<AppItem> appList = new ArrayList<AppItem>();	
 	private int mPageindex = 0;
 	private final int NUM_COLUMNS = 2;
-	private BitmapDrawable mBitmapDrawable = null;
 	private static final String FLASH_PLAYER = "com.adobe.flashplayer";
 	
 	private static int[] mBgCorlorArray = {
@@ -72,6 +70,17 @@ OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, OnItemLongClic
 			R.drawable.bg_blue,R.drawable.bg_yellow,		//11-12
 			R.drawable.bg_green,R.drawable.bg_purple,		//13-14
 			R.drawable.bg_red,R.drawable.bg_green,			//15-16
+	};
+	
+	private static List<String> hideList = new ArrayList<String>(){
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
+		{
+			add("com.xgd.umsapp_com.xgd.umsapp.activity.MainActivity");
+		}
 	};
 	
 	//MAP通过包名获取资源
@@ -171,25 +180,27 @@ OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, OnItemLongClic
 	        	for (ResolveInfo reInfo : resolveInfos) {  
 	        		String className = reInfo.activityInfo.name; 
 	        		String packageName = reInfo.activityInfo.packageName;
-	        		if(!FLASH_PLAYER.equals(packageName)){
-	        			AppItem appInfo = new AppItem();             		
-	            		appInfo.setPackageName(packageName);
-	    				appInfo.setClassName(className);
-	    				appInfo.setAppName((String) reInfo.loadLabel(pm));
+	        		String clpaName = packageName + "_"+ className;
+	        		//过滤相关包名
+	        		if(hideList.contains(clpaName)){
+	        			continue;
+	        		}
+        			AppItem appInfo = new AppItem();             		
+            		appInfo.setPackageName(packageName);
+    				appInfo.setClassName(className);
+    				appInfo.setAppName((String) reInfo.loadLabel(pm));
 //	    				appInfo.setAppIcon(reInfo.loadIcon(pm));
-	    				Log.i("[gx]", "packageName_className:" + packageName + "_"+ className);
-	    				if(appMap.get(appInfo.getName()) != null){
-	    					appInfo.setAppPosition(appMap.get(appInfo.getName())[0].intValue());
-	    					appInfo.setAppBg(getBaseContext().getResources().getDrawable(mBgCorlorArray[appInfo.getAppPosition()-1]));
-	    					appInfo.setAppIcon(getBaseContext().getResources().getDrawable(appMap.get(appInfo.getName())[1]));
-	    					systemAList.add(appInfo);
-	    				}else{
-	    					appInfo.setAppBg(getBaseContext().getResources().getDrawable(R.drawable.bg_gray));
-	    					appInfo.setAppIcon(reInfo.loadIcon(pm));
-	    					userAppList.add(appInfo);
-	    				}
-	    					
-	        		}            		
+    				Log.i("[gx]", "packageName_className:" + packageName + "_"+ className);
+    				if(appMap.get(appInfo.getName()) != null){
+    					appInfo.setAppPosition(appMap.get(appInfo.getName())[0].intValue());
+    					appInfo.setAppBg(getBaseContext().getResources().getDrawable(mBgCorlorArray[appInfo.getAppPosition()-1]));
+    					appInfo.setAppIcon(getBaseContext().getResources().getDrawable(appMap.get(appInfo.getName())[1]));
+    					systemAList.add(appInfo);
+    				}else{
+    					appInfo.setAppBg(getBaseContext().getResources().getDrawable(R.drawable.bg_gray));
+    					appInfo.setAppIcon(reInfo.loadIcon(pm));
+    					userAppList.add(appInfo);
+    				}
 	        	}
 
 //	        	sortList(systemAList);
@@ -200,7 +211,8 @@ OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, OnItemLongClic
 	        	
 	        }
 	        int pageSize = getResources().getInteger(R.integer.xgd_config_page_size);
-			final int PageCount = (int) Math.ceil(appList.size() / (float)pageSize);
+	        //first page four items
+			final int PageCount = (int) Math.ceil((appList.size() - 4) / (float)pageSize + 1);
 			mLists = new ArrayList<View>();
 
 			for (int i = 0; i < PageCount; i++) {
@@ -209,11 +221,15 @@ OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, OnItemLongClic
 				
 				if(i ==0){
 					//first page
-					gv = (XGDAllAppGridView)llFirstPage.findViewById(R.id.gv_first_app_page);
 					mFirstLayout = (FrameLayout)llFirstPage.findViewById(R.id.xgd_app_bg_pay);
-					mFirstLayout.setClickable(true);
-					mFirstLayout.setOnClickListener(this);
-				}else{
+					gv = (XGDAllAppGridView)llFirstPage.findViewById(R.id.gv_first_app_page);
+					mFirstLayout.setOnClickListener(new View.OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							onPay(v);
+						}
+					});
+				}else{		
 					gv = new XGDAllAppGridView(this);
 				}
 				 
@@ -230,7 +246,8 @@ OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, OnItemLongClic
 				gv.setOnItemLongClickListener(this);
 				if(i == 0){
 					//第一页显示支付
-					gv.setPadding(5, 380, 5, 0);
+					gv.setPadding(5, 5, 5, 0);
+					mFirstLayout.setPadding(5, 0, 5, 0);
 				}else{
 					gv.setPadding(5, 0, 5, 0);
 				}
@@ -287,9 +304,12 @@ OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, OnItemLongClic
 	}
 
 	public void onPay(View v) {
-		String packageName = "com.nexgo.smartpos.api";
-		String className = "com.nexgo.smartpos.service.DeviceServiceEngineService";
-		startActivity(packageName,className);
+		String packageName = "com.xgd.umsapp";
+		String className = "com.xgd.umsapp.activity.MainActivity";
+		if(!startActivity(packageName,className)){
+			Log.d("[gx]","onPay not founc activity!");
+			Toast.makeText(this, getString(R.string.app_pay_not_found), Toast.LENGTH_SHORT).show();
+		}
 	}
 	
 	@Override
@@ -302,7 +322,8 @@ OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, OnItemLongClic
 	public boolean onItemLongClick(AdapterView<?> parent, View view,
 			int position, long id) {
 		int pageSize = getResources().getInteger(R.integer.xgd_config_page_size);
-		AppItem appInfo = (AppItem) appList.get(mPageindex * pageSize + position);
+		int itemIndex = mPageindex * pageSize + (mPageindex == 0 ? position:position-2);
+		AppItem appInfo = (AppItem) appList.get(itemIndex);
 		String packageName = appInfo.getPackageName();
         uninstall(packageName);
 		//String appName = appInfo.getAppName();
@@ -319,12 +340,19 @@ OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, OnItemLongClic
 	}
 	
 	
-	public void startActivity(String pkgName,String clsName){
-		Intent mIntent = new Intent();
+	public boolean startActivity(String pkgName,String clsName){
+		Intent intent = new Intent();
 		ComponentName comp = new ComponentName(pkgName, clsName);
-		mIntent.setComponent(comp);
-		mIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		startActivity(mIntent);
+		intent.setComponent(comp);
+		
+		if (getPackageManager().resolveActivity(intent, 0) == null) {  
+			// 系统不存在此Activity
+			return false;
+		}
+		
+		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		startActivity(intent);
+		return true;
 	}
 	
 	public void uninstall(String packageName){

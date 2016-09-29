@@ -71,5 +71,6 @@
     <string name="uninstall_text">卸载</string>
     <string name="uninstalling">正在卸载...</string>
     <string name="app_pay">收银</string>
+    <string name="app_pay_not_found">未找到收银应用</string>
 
 </resources>

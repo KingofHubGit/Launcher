@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.android.launcher"
-    android:versionCode="4"
-    android:versionName="1.1.2_20160530" >
+    android:versionCode="10"
+    android:versionName="2.0.0_20160929" >
     <!-- android:sharedUserId="android.uid.system" -->
 
 	<original-package android:name="com.android.launcher2" />
@@ -31,7 +31,7 @@
                 <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.HOME" />
-                <category android:name="android.intent.category.LAUNCHER" />
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.MONKEY"/>
             </intent-filter>
