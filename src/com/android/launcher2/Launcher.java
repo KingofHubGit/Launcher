@@ -1,5 +1,6 @@
 package com.android.launcher2;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -20,7 +21,9 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.ResolveInfo;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
@@ -329,10 +332,11 @@ OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, OnItemLongClic
 			int position, long id) {
 		int pageSize = getResources().getInteger(R.integer.xgd_config_page_size);
 		int itemIndex = mPageindex * pageSize + (mPageindex == 0 ? position:position-2);
-		if(itemIndex >= systemAList.size()){
+		AppItem appInfo = (AppItem) appList.get(itemIndex);
+		String packageName = appInfo.getPackageName();
+		//if(itemIndex >= systemAList.size()){
+		if(!isSystemApplication(appInfo.getPackageName())){
 			//非系统应用才可以卸载
-			AppItem appInfo = (AppItem) appList.get(itemIndex);
-			String packageName = appInfo.getPackageName();
 	        uninstall(packageName);
 			//String appName = appInfo.getAppName();
 			//showDialog("是否要卸载 " + appName,packageName);
@@ -406,6 +410,20 @@ OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, OnItemLongClic
 			}
 		}
 	};
+	
+	
+	public boolean isSystemApplication(String packageName){  
+        PackageManager manager = getPackageManager();  
+        try {  
+            PackageInfo packageInfo = manager.getPackageInfo(packageName, PackageManager.GET_CONFIGURATIONS);  
+            if((packageInfo.applicationInfo.flags & android.content.pm.ApplicationInfo.FLAG_SYSTEM)!=0){  
+                return true;  
+            }  
+        } catch (NameNotFoundException e) {  
+            e.printStackTrace();  
+        }  
+        return false;  
+    } 
 
 	@Override
 	public void onClick(View v) {
