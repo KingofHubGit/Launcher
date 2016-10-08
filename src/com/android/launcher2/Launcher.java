@@ -58,6 +58,8 @@ OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, OnItemLongClic
 	private int mPageindex = 0;
 	private final int NUM_COLUMNS = 2;
 	private static final String FLASH_PLAYER = "com.adobe.flashplayer";
+	private List<AppItem> systemAList;
+	private List<AppItem> userAppList;
 	
 	private static int[] mBgCorlorArray = {
 			R.drawable.bg_purple,R.drawable.bg_blue, 	//1-2
@@ -80,6 +82,9 @@ OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, OnItemLongClic
 
 		{
 			add("com.xgd.umsapp_com.xgd.umsapp.activity.MainActivity");
+			add("com.android.inputmethod.latin_com.android.inputmethod.latin.setup.SetupActivity");
+			add("com.qualcomm.qti.modemtestmode_com.qualcomm.qti.modemtestmode.MbnFileActivate");
+			add("com.google.android.inputmethod.pinyin_com.google.android.apps.inputmethod.libs.framework.core.LauncherActivity");
 		}
 	};
 	
@@ -170,8 +175,8 @@ OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, OnItemLongClic
 			PackageManager pm = getPackageManager(); 
 			Intent intent = new Intent(Intent.ACTION_MAIN, null);  
 			intent.addCategory(Intent.CATEGORY_LAUNCHER); 
-			List<AppItem> systemAList = new ArrayList<AppItem>();	
-			List<AppItem> userAppList = new ArrayList<AppItem>();	
+			systemAList = new ArrayList<AppItem>();	
+			userAppList = new ArrayList<AppItem>();	
 			
 	        List<ResolveInfo> resolveInfos = pm.queryIntentActivities(intent, 0);  
 //        	Collections.sort(resolveInfos,new ResolveInfo.DisplayNameComparator(pm));  
@@ -323,12 +328,16 @@ OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, OnItemLongClic
 			int position, long id) {
 		int pageSize = getResources().getInteger(R.integer.xgd_config_page_size);
 		int itemIndex = mPageindex * pageSize + (mPageindex == 0 ? position:position-2);
-		AppItem appInfo = (AppItem) appList.get(itemIndex);
-		String packageName = appInfo.getPackageName();
-        uninstall(packageName);
-		//String appName = appInfo.getAppName();
-		//showDialog("是否要卸载 " + appName,packageName);
-		return true;
+		if(itemIndex >= systemAList.size()){
+			//非系统应用才可以卸载
+			AppItem appInfo = (AppItem) appList.get(itemIndex);
+			String packageName = appInfo.getPackageName();
+	        uninstall(packageName);
+			//String appName = appInfo.getAppName();
+			//showDialog("是否要卸载 " + appName,packageName);
+			return true;
+		}
+		return false;
 	}
 	
 	@Override
