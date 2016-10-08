@@ -267,6 +267,7 @@ OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, OnItemLongClic
 		     
 			adapter = new XGDAllAppViewPagerAdapter(this, mLists);
 			mViewPager.setAdapter(adapter);
+			mViewPager.setCurrentItem(mPageindex);
 			mViewPager.invalidate();
 	}
 	
