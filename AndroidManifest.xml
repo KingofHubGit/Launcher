@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.android.launcher"
     android:versionCode="10"
-    android:versionName="2.0.0_20160929" >
+    android:versionName="2.0.0_20161014" >
     <!-- android:sharedUserId="android.uid.system" -->
 
 	<original-package android:name="com.android.launcher2" />
