@@ -29,7 +29,7 @@
 	  <TextView 
 	        android:id="@+id/tv_pay"
             android:layout_marginTop="85dp"
-            android:layout_marginLeft="181dp"
+            android:layout_marginLeft="191dp"
             android:clickable="false"
             android:longClickable="false"
             android:text="@string/app_pay"
