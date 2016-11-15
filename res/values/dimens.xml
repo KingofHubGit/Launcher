@@ -27,7 +27,8 @@
     
     <dimen name="xgd_app_item_double_width">362dp</dimen>
     
-    <dimen name="xgd_app_font_size">13sp</dimen>
+    <dimen name="xgd_app_font_size">17sp</dimen>
+    <dimen name="xgd_pay_font_size">22sp</dimen>
     
     
     <dimen name="app_icon_size">48dp</dimen>
