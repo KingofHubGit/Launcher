@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<resources>
+<string name="app_name">XGD主頁</string>
+<string name="load_init_info">正在初始化數據…</string>
+<string name="home_title_tv">電視</string>
+<string name="home_title_movie">電影</string>
+<string name="home_title_game">遊戲</string>
+<string name="home_title_mall">安卓商城</string>
+<string name="home_title_app">應用</string>
+<string name="home_title_set">系統</string>
+<string name="on_app">未找到數據模塊!</string>
+<string name="on_add_app">應用快速鍵已存在，無需添加.</string>
+<string name="on_app_delete">未找到删除的應用快速鍵!</string>
+<string name="remove_device">外部設備被移除</string>
+<string name="dialog_nonetwork_title">網絡提示</string>
+<string name="dialog_nonetwork_msg">網絡已斷開，是否配寘網絡？</string>
+<string name="dialog_ok">確定</string>
+<string name="dialog_cancel">取消</string>
+<!-- Weather -->
+<string name="city_automatic">自動獲取</string>
+<string name="city_manual">手動配寘</string>
+<string name="set_city">配寘都市</string>
+<string name="city_load">正在獲取都市資訊…</string>
+<string name="city_error">獲取都市資訊有誤，請手動配寘都市.</string>
+<string name="city_new">都市：</string>
+<string name="choose_city">選擇城市</string>
+<string name="hot_city">熱門都市</string>
+<string name="shengfen">省份</string>
+<string name="diqu">地區</string>
+<string name="city">北京</string>
+<string name="city_sheng">省</string>
+<string name="city_shi">市</string>
+<string name="city_str">來自：</string>
+<!--商城-->
+<string name="mall_title_1">熱門推薦</string>
+<string name="mall_title_2">影視點播</string>
+<string name="mall_title_3">音樂K歌</string>
+<string name="mall_title_4">家庭娛樂</string>
+<string name="mall_title_5">健康生活</string>
+<string name="mall_title_6">遊戲</string>
+<string name="mall_title_7">兒童天地</string>
+<!--應用-->
+<string name="app_title_add">添加應用</string>
+<string name="app_title_all">所有應用</string>
+<string name="app_title_add_">添加應用快速鍵</string>
+<string name="app_title_update">更新應用快速鍵</string>
+<string name="app_title_delete">删除應用快速鍵</string>
+<string name="app_title_szie">應用個數：</string>
+<!--設定-->
+<string name="system_title_setting">設定</string>
+<string name="system_title_update">陞級</string>
+<string name="system_title_download">下載</string>
+<string name="system_title_soft">軟件</string>
+<string name="system_title_guide">使用者指南</string>
+<!--軟件管理-->
+<string name="apps_runing">正在運行</string>
+<string name="soft_move">軟件搬家</string>
+<string name="soft_remove">軟件卸載</string>
+<string name="cancel">取消</string>
+<string name="app_clean">停止</string>
+<string name="move_tosd">移至SD卡</string>
+<string name="move_tosding">正在移動..</string>
+<string name="uninstall_text">卸載</string>
+<string name="uninstalling">正在卸載…</string>
+<string name="app_pay">收銀</string>
+<string name="app_pay_not_found">未找到收銀應用</string>
+</resources>

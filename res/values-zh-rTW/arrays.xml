@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="main_edit">
+        <item>添加應用快速鍵</item>
+        <item>修改應用快速鍵</item>
+        <item>删除應用快速鍵</item>
+    </string-array>
+
+</resources>
