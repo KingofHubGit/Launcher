@@ -335,7 +335,18 @@ OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, OnItemLongClic
 		String className = "com.xgd.umsapp.activity.MainActivity";
 		if(!startActivity(packageName,className)){
 			Log.d("[gx]","onPay not founc activity!");
-			Toast.makeText(this, getString(R.string.app_pay_not_found), Toast.LENGTH_SHORT).show();
+
+            Intent intent = new Intent("android.intent.action.PAY_APP");
+            List<ResolveInfo> resolveinfoList = getPackageManager()
+                .queryIntentActivities(intent, 0);
+
+            if(resolveinfoList.size() > 0){
+                startActivity(intent);
+            }else{
+                Toast.makeText(this, getString(R.string.app_pay_not_found), Toast.LENGTH_SHORT).show();
+            }
+
+
 		}
 	}
 	
