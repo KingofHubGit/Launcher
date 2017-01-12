@@ -147,6 +147,24 @@ OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, OnItemLongClic
 		registerReceiver(mReceiver, filter);
 		
 	}
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        
+        super.onNewIntent(intent);
+        
+        if (Intent.ACTION_MAIN.equals(intent.getAction())) {
+            //是否在当前应用按Home键
+            final boolean alreadyOnHome =
+                ((intent.getFlags() & Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT)
+                       != Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
+            
+            if(alreadyOnHome){
+                mViewPager.setCurrentItem(0);
+            }
+            
+        }
+    }
 	
 	@Override
 	protected void onResume() {
