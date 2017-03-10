@@ -11,9 +11,14 @@ import java.util.Map;
 import com.android.launcher.R;
 import com.android.launcher2.AppItem;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.provider.Settings;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -165,9 +170,25 @@ OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, OnItemLongClic
             
         }
     }
-	
-	@Override
+
+
+    @Override
+    protected void onPause() {
+        /* 如果客户BUG已解决，这个temp属性将会删掉 */
+        if(getProperty("ro.xgd.custom.temp.name","none").equals("ums")){
+            Log.d("[gx]","onPause ums -------------------");
+            Settings.System.putInt(getContentResolver(), "status_bar_disabled", 1);
+        }
+        super.onPause();
+    }
+
+    @Override
 	protected void onResume() {
+        /* 如果客户BUG已解决，在onResume里还原设置项，所以属性名和onPuase的不一样*/
+        if(getProperty("ro.xgd.custom.name","none").equals("ums")){
+            Log.d("[gx]","onResume ums -------------------");
+            Settings.System.putInt(getContentResolver(), "status_bar_disabled", 0);
+        }
 		super.onResume();
 	}
 
@@ -334,7 +355,7 @@ OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, OnItemLongClic
 		String packageName = "com.xgd.umsapp";
 		String className = "com.xgd.umsapp.activity.MainActivity";
 		if(!startActivity(packageName,className)){
-			Log.d("[gx]","onPay not founc activity!");
+			Log.d("[gx]","onPay not found activity!");
 
             Intent intent = new Intent("android.intent.action.PAY_APP");
             List<ResolveInfo> resolveinfoList = getPackageManager()
@@ -440,6 +461,38 @@ OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, OnItemLongClic
 		}
 	};
 	
+
+    //  获取设备名称，参数：ro.xgd.custom.name
+    public String getProperty(String key,String keyDefault) {
+        String result = null;
+        try {
+            Class<?> spCls = Class.forName("android.os.SystemProperties");
+            Class<?>[] typeArgs = new Class[2];
+            typeArgs[0] = String.class;
+            typeArgs[1] = String.class;
+            Constructor<?> spcs = spCls.getConstructor();
+
+            Object[] valueArgs = new Object[2];
+            valueArgs[0] = key;
+            valueArgs[1] = keyDefault;
+            Object sp = spcs.newInstance();
+
+            Method method = spCls.getMethod("get", typeArgs);
+            result = (String) method.invoke(sp, valueArgs);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
 	
 	public boolean isSystemApplication(String packageName){  
         PackageManager manager = getPackageManager();  
