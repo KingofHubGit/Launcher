@@ -228,6 +228,11 @@ OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, OnItemLongClic
 	        		String className = reInfo.activityInfo.name; 
 	        		String packageName = reInfo.activityInfo.packageName;
 	        		String clpaName = packageName + "_"+ className;
+					if(getProperty("ro.xgd.enable.phone","false").equals("false")){
+						hideList.add("com.android.dialer_com.android.dialer.DialtactsActivity");
+						hideList.add("com.android.mms_com.android.mms.ui.ConversationList");
+						hideList.add("com.android.contacts_com.android.contacts.activities.PeopleActivity");
+					}
 	        		//过滤相关包名
 	        		if(hideList.contains(clpaName)){
 	        			continue;
