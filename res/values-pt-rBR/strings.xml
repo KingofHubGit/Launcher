@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">xgdLauncher</string>
+    
+    <string name="title_alert">ALERTA</string>
+    <string name="title_update">ATUALIZAÇÃO</string>
+    <string name="btn_ok">OK</string>
+    <string name="cancel">CANCELAR</string>
+	<string name="app_clean">LIMPAR</string>
+	<string name="app_pay">Pagar</string>
+	<string name="app_pay_not_found">APP de pagamento não encontrado</string>
+</resources>
