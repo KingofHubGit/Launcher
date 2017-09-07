@@ -47,6 +47,13 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Toast;
 
+
+import java.io.BufferedInputStream;
+import java.io.DataInputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
 /** 
  * 
  * @data 2016-4-20
@@ -66,6 +73,7 @@ OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, OnItemLongClic
 	private int mPageindex = 0;
 	private final int NUM_COLUMNS = 2;
 	private static final String FLASH_PLAYER = "com.adobe.flashplayer";
+	private static final String HIDE_LIST_PATH = "/private/config/hidelist.cfg";
 	private List<AppItem> systemAList;
 	private List<AppItem> userAppList;
 	
@@ -212,6 +220,33 @@ OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, OnItemLongClic
 		}
 		super.onDestroy();
 	}
+
+
+    /*
+        从文件读取隐藏列表
+     */
+    private void setHideListFromFile(){
+        FileInputStream fis;
+        DataInputStream dataIO;
+        String strLine = null;
+        
+        File file = new File(HIDE_LIST_PATH);
+        if(file.exists()){
+            try {
+                fis = new FileInputStream(file);
+                dataIO = new DataInputStream(fis);
+
+                while((strLine =  dataIO.readLine()) != null) {
+                    hideList.add(strLine);
+                } 
+
+                dataIO.close();
+                fis.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 	
 	public void onCreateAppView(){	
 			PackageManager pm = getPackageManager(); 
@@ -219,6 +254,14 @@ OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, OnItemLongClic
 			intent.addCategory(Intent.CATEGORY_LAUNCHER); 
 			systemAList = new ArrayList<AppItem>();	
 			userAppList = new ArrayList<AppItem>();	
+
+            setHideListFromFile();
+
+            if(getProperty("ro.xgd.enable.phone","false").equals("false")){
+                hideList.add("com.android.dialer_com.android.dialer.DialtactsActivity");
+                hideList.add("com.android.mms_com.android.mms.ui.ConversationList");
+                hideList.add("com.android.contacts_com.android.contacts.activities.PeopleActivity");
+            }
 			
 	        List<ResolveInfo> resolveInfos = pm.queryIntentActivities(intent, 0);  
 //        	Collections.sort(resolveInfos,new ResolveInfo.DisplayNameComparator(pm));  
@@ -228,11 +271,7 @@ OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, OnItemLongClic
 	        		String className = reInfo.activityInfo.name; 
 	        		String packageName = reInfo.activityInfo.packageName;
 	        		String clpaName = packageName + "_"+ className;
-					if(getProperty("ro.xgd.enable.phone","false").equals("false")){
-						hideList.add("com.android.dialer_com.android.dialer.DialtactsActivity");
-						hideList.add("com.android.mms_com.android.mms.ui.ConversationList");
-						hideList.add("com.android.contacts_com.android.contacts.activities.PeopleActivity");
-					}
+					
 	        		//过滤相关包名
 	        		if(hideList.contains(clpaName)){
 	        			continue;
