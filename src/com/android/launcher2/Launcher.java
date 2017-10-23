@@ -46,6 +46,8 @@ import android.widget.FrameLayout;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Toast;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 
 import java.io.BufferedInputStream;
@@ -108,12 +110,23 @@ OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, OnItemLongClic
 	private static Map<String, Integer[]> appMap = new HashMap<String, Integer[]>(){
 		private static final long serialVersionUID = 1L;
 		{
-		        put(("com.android.settings_com.android.settings.Settings"), new Integer[]
-		        		{1,R.drawable.ic_settings});
-		        put("com.android.deskclock_com.android.deskclock.DeskClock",new Integer[]
-		        		{2,R.drawable.ic_clock});
-		        put("com.android.calculator2_com.android.calculator2.Calculator", new Integer[]
-		        		{3,R.drawable.ic_calculate});
+                
+                if(isFlm()){
+                    //付临门定制设置和时钟对调
+                    put(("com.android.settings_com.android.settings.Settings"), new Integer[]
+                            {3,R.drawable.ic_settings});
+                    put("com.android.deskclock_com.android.deskclock.DeskClock",new Integer[]
+                            {2,R.drawable.ic_clock});
+                    put("com.android.calculator2_com.android.calculator2.Calculator", new Integer[]
+                            {1,R.drawable.ic_calculate});
+                }else{
+                    put(("com.android.settings_com.android.settings.Settings"), new Integer[]
+                            {1,R.drawable.ic_settings});
+                    put("com.android.deskclock_com.android.deskclock.DeskClock",new Integer[]
+                            {2,R.drawable.ic_clock});
+                    put("com.android.calculator2_com.android.calculator2.Calculator", new Integer[]
+                            {3,R.drawable.ic_calculate});
+                }
 		        put("com.xgd.update_com.xgd.update.UpdateActivity", new Integer[]
 		        		{4,R.drawable.ic_update});
 		        put("com.android.music_com.android.music.MusicBrowserActivity", new Integer[]
@@ -179,6 +192,13 @@ OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, OnItemLongClic
         }
     }
 
+
+    public static boolean isFlm(){
+        if(getProperty("ro.xgd.custom.name","xgd").equals("flm")){
+            return true;
+        }
+        return false;
+    }
 
     @Override
     protected void onPause() {
@@ -313,6 +333,16 @@ OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, OnItemLongClic
 				if(i ==0){
 					//first page
 					mFirstLayout = (FrameLayout)llFirstPage.findViewById(R.id.xgd_app_bg_pay);
+
+                    //付临门定制直接显示背景
+                    if(isFlm()){
+                        mFirstLayout.setBackgroundResource(R.drawable.ic_top_flm);
+                        ImageView itemPay = (ImageView)mFirstLayout.findViewById(R.id.xgd_app_item_pay);
+                        TextView textPay = (TextView)mFirstLayout.findViewById(R.id.tv_pay);
+                        itemPay.setVisibility(View.GONE);
+                        textPay.setVisibility(View.GONE);
+                    }
+
 					gv = (XGDAllAppGridView)llFirstPage.findViewById(R.id.gv_first_app_page);
 					mFirstLayout.setOnClickListener(new View.OnClickListener() {
 						@Override
@@ -507,7 +537,7 @@ OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, OnItemLongClic
 	
 
     //  获取设备名称，参数：ro.xgd.custom.name
-    public String getProperty(String key,String keyDefault) {
+    public static String getProperty(String key,String keyDefault) {
         String result = null;
         try {
             Class<?> spCls = Class.forName("android.os.SystemProperties");
