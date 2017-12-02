@@ -28,6 +28,7 @@ public class XGDAllAppGridViewAdapter extends BaseAdapter {
 	private static int itemVisiblePosition = -1;
 	private static int itemVisiblePage = -1;
 	private static int itemVisible = -1;
+	private int movePosition = -1;
 
 	public XGDAllAppGridViewAdapter(Context pContext, List<AppItem> list, int page) {
 		this.mContext = pContext;
@@ -135,6 +136,38 @@ public class XGDAllAppGridViewAdapter extends BaseAdapter {
 		itemVisible = visible;
 	}
 	
+	
+	 public void exchangePosition(int originalPosition, int nowPosition, boolean isMove) {
+	        /*T t = list.get(originalPosition);
+	        list.remove(originalPosition);
+	        list.add(nowPosition, t);
+	        movePosition = nowPosition;
+	        this.isMove = isMove;
+	        notifyDataSetChanged();*/
+		 	int currentPage = AppApplication.getCurrentPager();
+		 	int originalId,nowId;
+		 	int id;
+		 	if(currentPage == 0){
+		 		originalId = originalPosition;
+		 		nowId = nowPosition;
+		 		Log.v("dengtl","=====7=====exchangePosition  0  original id = " + originalId);
+		 		Log.v("dengtl","=====7=====exchangePosition  0  now id = " + nowId);
+		 	}else{
+		 		originalId = (originalPosition+4+(currentPage -1)*6+1);
+		 		nowId = (nowPosition+4+(currentPage -1)*6+1);
+		 		Log.v("dengtl","=====7=====exchangePosition  else  original id = " + originalId);
+		 		Log.v("dengtl","=====7=====exchangePosition  else  now id = " + nowId);
+		 	}
+		 	List<AppItem> mList = new ArrayList<AppItem>();
+		 	
+/*		 	AppItem t = mList.get(originalId);
+		 	mList.remove(originalId);
+		 	mList.add(nowId, t);
+		 	//movePosition = nowId;
+		 	//this.isMove = isMove;
+		 	notifyDataSetChanged();*/
+		 	
+	 }
 	
 
 }

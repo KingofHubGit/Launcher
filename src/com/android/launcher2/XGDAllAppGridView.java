@@ -114,20 +114,24 @@ public class XGDAllAppGridView extends GridView implements AdapterView.OnItemLon
         this.view = view;
         this.position = position;
         this.tempPosition = position;
-        mX = mWindowX - view.getLeft() - this.getLeft();
-        mY = mWindowY - view.getTop() - this.getTop();
-
+        mX = mWindowX - view.getLeft() ;
+        mY = mWindowY - view.getTop() ;
+        Log.v("dengtl","=====1===== onItemLongClick   view.getLeft() = " + view.getLeft() 
+        		+ "  this.getLeft() = " + this.getLeft());
+        Log.v("dengtl","=====1===== onItemLongClick   view.getTop() = " + view.getTop() 
+        		+ "  this.getTop() = " + this.getTop());
+        
         Log.v(TAG,"=====Long click!=====   view : " + view);
         Log.v(TAG,"=====Long click!=====   parent : " + parent);
         //view.setVisibility(VISIBLE);
         //parent.setVisibility(INVISIBLE);
         initWindow();
+        AppApplication.setDragStatus(false);
+        Launcher.mViewPager.setScroll(AppApplication.getDragStatus());
+        
         int currentPage = AppApplication.getCurrentPager();
         mGridViewAdapter.setItemVisible(View.INVISIBLE,currentPage, position);
         mGridViewAdapter.getView(position, view, parent);
-        
-        //AppApplication.setDragStatus(false);
-        mode = MODE_DRAG;
         
         return true;
     }
@@ -139,7 +143,7 @@ public class XGDAllAppGridView extends GridView implements AdapterView.OnItemLon
         case MotionEvent.ACTION_DOWN:
             mWindowX = ev.getRawX();
             mWindowY = ev.getRawY();
-            Log.v(TAG,"===== click!=====  "+"  mWindowX= "+mWindowX+"  mWindowY= "+mWindowY );
+            Log.v("dengtl","===== 0 =====  onInterceptTouchEvent"+"  mWindowX= "+mWindowX+"  mWindowY= "+mWindowY );
             break;
         case MotionEvent.ACTION_MOVE:
             break;
@@ -164,9 +168,12 @@ public class XGDAllAppGridView extends GridView implements AdapterView.OnItemLon
                 
             case MotionEvent.ACTION_UP:
                 if (mode == MODE_DRAG) {
-                	mGridViewAdapter.setItemVisible(View.VISIBLE,AppApplication.getCurrentPager(), position);
-                	mGridViewAdapter.getView(position, view, parent);               	
+                	//mGridViewAdapter.setItemVisible(View.VISIBLE,AppApplication.getCurrentPager(), position);
+                	//mGridViewAdapter.getView(position, view, parent);               	
                     closeWindow(ev.getX(), ev.getY());
+                    
+                    AppApplication.setDragStatus(true);
+                    Launcher.mViewPager.setScroll(AppApplication.getDragStatus());
                 }
                 Log.v(TAG,"ACTION_UP    @@@@@@@@@@@@");
                 
@@ -191,7 +198,7 @@ public class XGDAllAppGridView extends GridView implements AdapterView.OnItemLon
 			holder.itemTitle.setText(((TextView) view.
 					findViewById(R.id.xgd_all_app_grid_item_name)).getText());
 			
-			Log.v("deng------","get Text :::: " + holder.itemTitle.getText());
+			Log.v("deng------","get Text ++++++ " + holder.itemTitle.getText());
         }
         if (layoutParams == null) {
             layoutParams = new WindowManager.LayoutParams();
@@ -215,6 +222,8 @@ public class XGDAllAppGridView extends GridView implements AdapterView.OnItemLon
         if (mode == MODE_DRAG) {
             float x = ev.getRawX() - mX;
             float y = ev.getRawY() - mY;
+            Log.v("dengtl","=====2===== updateWindow   mX = " + mX + "  mY = " + mY);
+            Log.v("dengtl","=====2===== updateWindow   x = " + x + "  y = " + y);
             if (layoutParams != null) {
                 layoutParams.x = (int) x;
                 layoutParams.y = (int) y;
@@ -222,11 +231,13 @@ public class XGDAllAppGridView extends GridView implements AdapterView.OnItemLon
             }
             float mx = ev.getX();
             float my = ev.getY();
+            Log.v("dengtl","=====3===== updateWindow   mx = " + mx + "  my = " + my);
             int dropPosition = pointToPosition((int) mx, (int) my);
-            Log.i(TAG+"$$$$", "dropPosition : " + dropPosition + " , tempPosition : " + tempPosition);
+            Log.i("dengtl", "=====4=====dropPosition : " + dropPosition + " , tempPosition : " + tempPosition);
             if (dropPosition == tempPosition || dropPosition == GridView.INVALID_POSITION) {
                 return;
             }
+            tempPosition = dropPosition;
             //itemMove(dropPosition);
         }
     }
@@ -243,14 +254,15 @@ public class XGDAllAppGridView extends GridView implements AdapterView.OnItemLon
 
     private void itemDrop() {
         if (tempPosition == position || tempPosition == GridView.INVALID_POSITION) {
-        	//mGridViewAdapter.setItemVisible(View.VISIBLE,AppApplication.getCurrentPager(), position);
-        	//mGridViewAdapter.getView(position, view, parent); 
-        	Log.v(TAG,"itemDrop =======   setVisible! ");
+        	mGridViewAdapter.setItemVisible(View.VISIBLE,AppApplication.getCurrentPager(), position);
+        	mGridViewAdapter.getView(position, view, parent); 
+        	Log.v("dengtl","  itemDrop =====5=====   setVisible! ");
         } else {
             ListAdapter adapter = getAdapter();
-           /* if (adapter != null && adapter instanceof DragGridAdapter) {
-                ((DragGridAdapter) adapter).exchangePosition(position, tempPosition, false);
-            }*/
+            if (adapter != null && adapter instanceof XGDAllAppGridViewAdapter) {
+                ((XGDAllAppGridViewAdapter) adapter).exchangePosition(position, tempPosition, false);
+                Log.v("dengtl","  itemDrop =====6=====   exchangePosition! ");
+            }
         }
     }
 	

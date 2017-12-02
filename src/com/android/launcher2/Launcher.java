@@ -69,7 +69,7 @@ OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, android.view.V
 	private XGDAllAppViewPagerAdapter adapter;
 	private View llFirstPage;
 	private List<View> mLists;
-	private XGDAllAppViewPager mViewPager;
+	public static XGDAllAppViewPager mViewPager;
 	FrameLayout mFirstLayout;
 	private List<AppItem> appList = new ArrayList<AppItem>();	
 	private int mPageindex = 0;
@@ -217,7 +217,7 @@ OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, android.view.V
             Log.d("[gx]","onResume ums -------------------");
             Settings.System.putInt(getContentResolver(), "status_bar_disabled", 0);
         }
-        mViewPager.setScroll(AppApplication.getDragStatus());
+        
         Log.d("deng","onResume -----$$$$$$$$-------------------");
 		super.onResume();
 	}
@@ -387,6 +387,7 @@ OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, android.view.V
 			mViewPager.setAdapter(adapter);
 			mViewPager.setCurrentItem(mPageindex);
 			mViewPager.invalidate();
+			mViewPager.setScroll(AppApplication.getDragStatus());
 	}
 	
 	public class SortComparator implements Comparator {  
