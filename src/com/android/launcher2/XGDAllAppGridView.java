@@ -135,14 +135,17 @@ public class XGDAllAppGridView extends GridView implements AdapterView.OnItemLon
 	@Override
 	public boolean onInterceptTouchEvent(MotionEvent ev) {
 		// TODO Auto-generated method stub
-		if (ev.getAction() == MotionEvent.ACTION_DOWN) {
-			mX = (int) ev.getX();
-			mY = (int) ev.getY();
-			mWindowX = (int) ev.getX();
-			mWindowY = (int) ev.getY();
-			Log.v(TAG,"===== click!=====  "+"  mX= "+mX+"  mY= "+mY );
+		switch (ev.getAction()) {
+        case MotionEvent.ACTION_DOWN:
+            mWindowX = ev.getRawX();
+            mWindowY = ev.getRawY();
+            Log.v(TAG,"===== click!=====  "+"  mWindowX= "+mWindowX+"  mWindowY= "+mWindowY );
+            break;
+        case MotionEvent.ACTION_MOVE:
+            break;
+        case MotionEvent.ACTION_UP:
+            break;
 		}
-		
 		return super.onInterceptTouchEvent(ev);
 	}
 	
@@ -238,12 +241,11 @@ public class XGDAllAppGridView extends GridView implements AdapterView.OnItemLon
         mode = MODE_NORMAL;
     }
 
-    /**
-     * 手指抬起时，item下落
-     */
     private void itemDrop() {
         if (tempPosition == position || tempPosition == GridView.INVALID_POSITION) {
-            getChildAt(position).setVisibility(VISIBLE);
+        	//mGridViewAdapter.setItemVisible(View.VISIBLE,AppApplication.getCurrentPager(), position);
+        	//mGridViewAdapter.getView(position, view, parent); 
+        	Log.v(TAG,"itemDrop =======   setVisible! ");
         } else {
             ListAdapter adapter = getAdapter();
            /* if (adapter != null && adapter instanceof DragGridAdapter) {
