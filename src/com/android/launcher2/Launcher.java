@@ -63,13 +63,13 @@ import java.io.IOException;
  */
 @SuppressLint("ShowToast")
 public class Launcher extends Activity implements 
-OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, OnItemLongClickListener, android.view.View.OnClickListener{
+OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, android.view.View.OnClickListener{
 	
 	private XGDAllAppGridViewAdapter mGridViewAdapter;
 	private XGDAllAppViewPagerAdapter adapter;
 	private View llFirstPage;
 	private List<View> mLists;
-	private ViewPager mViewPager;
+	private XGDAllAppViewPager mViewPager;
 	FrameLayout mFirstLayout;
 	private List<AppItem> appList = new ArrayList<AppItem>();	
 	private int mPageindex = 0;
@@ -159,7 +159,7 @@ OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, OnItemLongClic
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.xgd_all_app);
-		mViewPager = (ViewPager) findViewById(R.id.app_all_viewpager);
+		mViewPager = (XGDAllAppViewPager) findViewById(R.id.app_all_viewpager);
 		mViewPager.setOnPageChangeListener(this);
 		LayoutInflater inflater = (LayoutInflater)getSystemService(LAYOUT_INFLATER_SERVICE);       
 		llFirstPage = inflater.inflate(R.layout.apps_first_page, (ViewGroup)findViewById(R.id.ll_first_app_page));       
@@ -217,6 +217,8 @@ OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, OnItemLongClic
             Log.d("[gx]","onResume ums -------------------");
             Settings.System.putInt(getContentResolver(), "status_bar_disabled", 0);
         }
+        mViewPager.setScroll(AppApplication.getDragStatus());
+        Log.d("deng","onResume -----$$$$$$$$-------------------");
 		super.onResume();
 	}
 
@@ -364,7 +366,7 @@ OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, OnItemLongClic
 				gv.setVerticalScrollBarEnabled(false);
 //				gv.setSelector(R.drawable.item_bg_selected2);
 				gv.setOnItemClickListener(this);
-				gv.setOnItemLongClickListener(this);
+				//gv.setOnItemLongClickListener(this);
 				if(i == 0){
 					//第一页显示支付
 					gv.setPadding(5, 5, 5, 0);
@@ -399,6 +401,7 @@ OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, OnItemLongClic
 	
 	@Override
 	public void onPageScrollStateChanged(int arg0) {
+		AppApplication.setCurrentPager(mViewPager.getCurrentItem());
 	}
 
 	@Override
@@ -440,8 +443,7 @@ OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, OnItemLongClic
             }else{
                 Toast.makeText(this, getString(R.string.app_pay_not_found), Toast.LENGTH_SHORT).show();
             }
-
-
+           
 		}
 	}
 	
@@ -451,7 +453,7 @@ OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, OnItemLongClic
 		((XGDAllAppGridView)mLists.get(mPageindex)).setCurrentPosition(position);
 	}
 	
-	@Override
+	/*@Override
 	public boolean onItemLongClick(AdapterView<?> parent, View view,
 			int position, long id) {
 		int pageSize = getResources().getInteger(R.integer.xgd_config_page_size);
@@ -467,7 +469,7 @@ OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, OnItemLongClic
 			return true;
 		}
 		return false;
-	}
+	}*/
 	
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {

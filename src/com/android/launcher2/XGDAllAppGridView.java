@@ -1,22 +1,74 @@
 package com.android.launcher2;
 import android.content.Context;
+import android.graphics.PixelFormat;
 import android.util.AttributeSet;
-import android.view.ViewGroup;
+import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.ListAdapter;
+import android.widget.TextView;
 
-public class XGDAllAppGridView extends GridView {
-	private int position = 0;
+import com.android.launcher.R;
+import com.android.launcher2.XGDAllAppGridViewAdapter.ViewHolder;
+
+public class XGDAllAppGridView extends GridView implements AdapterView.OnItemLongClickListener{
+	
 	private XGDAllAppGridViewAdapter mGridViewAdapter;
+	
+    private static final String TAG = "deng-XGDAllAppGridView";
+
+	private View mStartDragItemView = null;
+	
+	private DragViewHolder holder = null;
+
+    private static final int MODE_DRAG = 1;
+    private static final int MODE_NORMAL = 2;
+
+    private static int mode = MODE_NORMAL;
+    
+    private AdapterView parent = null;
+    private int position = 0;
+    private View view;
+    private View dragView;
+    private boolean isMoving = false;
+
+    private int tempPosition;
+    
+    private WindowManager mWindowManager;
+    private WindowManager.LayoutParams layoutParams;
+    private LayoutInflater mInflater;
+    
+    // view的x差值
+    private float mX;
+    // view的y差值
+    private float mY;
+    // 手指按下时的x坐标(相对于整个屏幕)
+    private float mWindowX;
+    // 手指按下时的y坐标(相对于整个屏幕)
+    private float mWindowY;
+	
 	public XGDAllAppGridView(Context context) {
-		super(context);
+		this(context, null);
 		setChildrenDrawingOrderEnabled(true);
 	}
 	
 	public XGDAllAppGridView(Context context, AttributeSet attrs) {
-		super(context, attrs);
+		this(context, attrs, 0);
 		setChildrenDrawingOrderEnabled(true);
 	}
+	
+	public XGDAllAppGridView(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        mInflater = LayoutInflater.from(context);
+        mWindowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        setOnItemLongClickListener(this);
+    }
 
 	@Override
 	public void setAdapter(ListAdapter adapter) {
@@ -52,5 +104,167 @@ public class XGDAllAppGridView extends GridView {
 		}
 		return i;
 	}
+	
+	@Override
+    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+        if (mode == MODE_DRAG) {
+            return false;
+        }
+        this.parent = parent;
+        this.view = view;
+        this.position = position;
+        this.tempPosition = position;
+        mX = mWindowX - view.getLeft() - this.getLeft();
+        mY = mWindowY - view.getTop() - this.getTop();
 
+        Log.v(TAG,"=====Long click!=====   view : " + view);
+        Log.v(TAG,"=====Long click!=====   parent : " + parent);
+        //view.setVisibility(VISIBLE);
+        //parent.setVisibility(INVISIBLE);
+        initWindow();
+        int currentPage = AppApplication.getCurrentPager();
+        mGridViewAdapter.setItemVisible(View.INVISIBLE,currentPage, position);
+        mGridViewAdapter.getView(position, view, parent);
+        
+        //AppApplication.setDragStatus(false);
+        mode = MODE_DRAG;
+        
+        return true;
+    }
+	
+	@Override
+	public boolean onInterceptTouchEvent(MotionEvent ev) {
+		// TODO Auto-generated method stub
+		if (ev.getAction() == MotionEvent.ACTION_DOWN) {
+			mX = (int) ev.getX();
+			mY = (int) ev.getY();
+			mWindowX = (int) ev.getX();
+			mWindowY = (int) ev.getY();
+			Log.v(TAG,"===== click!=====  "+"  mX= "+mX+"  mY= "+mY );
+		}
+		
+		return super.onInterceptTouchEvent(ev);
+	}
+	
+	@Override
+    public boolean onTouchEvent(MotionEvent ev) {
+		
+        switch (ev.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                break;
+            case MotionEvent.ACTION_MOVE:
+            	
+                if (mode == MODE_DRAG) {
+                    updateWindow(ev);
+                }
+                break;
+                
+            case MotionEvent.ACTION_UP:
+                if (mode == MODE_DRAG) {
+                	mGridViewAdapter.setItemVisible(View.VISIBLE,AppApplication.getCurrentPager(), position);
+                	mGridViewAdapter.getView(position, view, parent);               	
+                    closeWindow(ev.getX(), ev.getY());
+                }
+                Log.v(TAG,"ACTION_UP    @@@@@@@@@@@@");
+                
+                
+                break;
+        }
+        return super.onTouchEvent(ev);
+    }
+	
+    private void initWindow() {
+        if (dragView == null) {
+        	dragView = mInflater.inflate(R.layout.xgd_all_app_gridview_item, null);
+			holder = new DragViewHolder();
+			holder.itemBg = (ImageView) dragView.findViewById(R.id.xgd_all_app_grid_item_icon);
+			holder.itemIcon = (ImageView) dragView.findViewById(R.id.xgd_app_item_icon);
+			holder.itemTitle = (TextView) dragView.findViewById(R.id.xgd_all_app_grid_item_name);
+            
+			holder.itemBg.setBackground(((ImageView)view.
+					findViewById(R.id.xgd_all_app_grid_item_icon)).getBackground());
+			holder.itemIcon.setBackground(((ImageView)view.
+					findViewById(R.id.xgd_app_item_icon)).getBackground());
+			holder.itemTitle.setText(((TextView) view.
+					findViewById(R.id.xgd_all_app_grid_item_name)).getText());
+			
+			Log.v("deng------","get Text :::: " + holder.itemTitle.getText());
+        }
+        if (layoutParams == null) {
+            layoutParams = new WindowManager.LayoutParams();
+            //layoutParams.type = WindowManager.LayoutParams.TYPE_PHONE;
+            //layoutParams.format = PixelFormat.RGBA_8888;
+            layoutParams.gravity = Gravity.TOP | Gravity.LEFT;
+            layoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
+                    | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;  
+            layoutParams.width = view.getWidth();
+            layoutParams.height = view.getHeight();
+            layoutParams.x = view.getLeft();
+            layoutParams.y = view.getTop();  
+        }
+
+        mWindowManager.addView(dragView, layoutParams);
+        mode = MODE_DRAG;
+    }
+	
+	private void updateWindow(MotionEvent ev) {
+		Log.v(TAG,"====updateWindow=====");
+        if (mode == MODE_DRAG) {
+            float x = ev.getRawX() - mX;
+            float y = ev.getRawY() - mY;
+            if (layoutParams != null) {
+                layoutParams.x = (int) x;
+                layoutParams.y = (int) y;
+                mWindowManager.updateViewLayout(dragView, layoutParams);
+            }
+            float mx = ev.getX();
+            float my = ev.getY();
+            int dropPosition = pointToPosition((int) mx, (int) my);
+            Log.i(TAG+"$$$$", "dropPosition : " + dropPosition + " , tempPosition : " + tempPosition);
+            if (dropPosition == tempPosition || dropPosition == GridView.INVALID_POSITION) {
+                return;
+            }
+            //itemMove(dropPosition);
+        }
+    }
+	
+	private void closeWindow(float x, float y) {
+        if (dragView != null) {
+            mWindowManager.removeView(dragView);
+            dragView = null;
+            layoutParams = null;
+        }
+        itemDrop();
+        mode = MODE_NORMAL;
+    }
+
+    /**
+     * 手指抬起时，item下落
+     */
+    private void itemDrop() {
+        if (tempPosition == position || tempPosition == GridView.INVALID_POSITION) {
+            getChildAt(position).setVisibility(VISIBLE);
+        } else {
+            ListAdapter adapter = getAdapter();
+           /* if (adapter != null && adapter instanceof DragGridAdapter) {
+                ((DragGridAdapter) adapter).exchangePosition(position, tempPosition, false);
+            }*/
+        }
+    }
+	
+
+	static class DragViewHolder {
+		//public LinearLayout itemImgBg;
+		public ImageView itemBg;
+		public ImageView itemIcon;
+		public TextView itemTitle;
+		
+		public void setVisible(int visible){
+			itemBg.setVisibility(visible);
+			itemIcon.setVisibility(visible);
+			itemTitle.setVisibility(visible);
+			Log.v("deng-Launcher", "set Visible------");
+		}
+	}
+	
 }

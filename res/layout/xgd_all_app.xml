@@ -7,7 +7,7 @@
     android:layout_gravity="center"
  >
 
-    <android.support.v4.view.ViewPager
+    <com.android.launcher2.XGDAllAppViewPager
         android:id="@+id/app_all_viewpager"
         android:layout_width="480dp"
         android:layout_height="800dp" 

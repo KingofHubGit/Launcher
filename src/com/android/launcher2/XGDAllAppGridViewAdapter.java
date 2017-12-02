@@ -3,11 +3,9 @@ package com.android.launcher2;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.android.launcher.R;
-import com.android.launcher2.AppItem;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +15,8 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.launcher.R;
+
 public class XGDAllAppGridViewAdapter extends BaseAdapter {
 
 
@@ -24,6 +24,10 @@ public class XGDAllAppGridViewAdapter extends BaseAdapter {
 	private List<AppItem> mList = new ArrayList<AppItem>();
 	private int selected = -1;
 	private LayoutInflater mInflater;
+	boolean isVisible = true;
+	private static int itemVisiblePosition = -1;
+	private static int itemVisiblePage = -1;
+	private static int itemVisible = -1;
 
 	public XGDAllAppGridViewAdapter(Context pContext, List<AppItem> list, int page) {
 		this.mContext = pContext;
@@ -66,6 +70,7 @@ public class XGDAllAppGridViewAdapter extends BaseAdapter {
 	@Override
 	public View getView(final int position, View convertView, ViewGroup parent) {
 		AppItem item = mList.get(position);
+		int currentPage = AppApplication.getCurrentPager();
 		ViewHolder holder = null;
 		if (null == convertView) {
 			holder = new ViewHolder();
@@ -83,13 +88,20 @@ public class XGDAllAppGridViewAdapter extends BaseAdapter {
 		if(item.getAppIcon() != null){
 			holder.itemIcon.setBackground(item.getAppIcon());
 		}
+		if( itemVisiblePosition == position && itemVisiblePage == currentPage ){
+			holder.setVisible(itemVisible);
+			Log.v("deng-Launcher","set item Visible!=======");
+		}
 		if (selected == position) {		
 			Animation animation = AnimationUtils.loadAnimation(mContext,R.anim.app_item_zoomout);
 			convertView.startAnimation(animation);
+			Log.v("deng-Launcher"," selected == position done!");
 		} else {
 			Animation animation = AnimationUtils.loadAnimation(mContext,R.anim.app_item_zoomin);
 			convertView.startAnimation(animation);
 		}
+		Log.v("deng-Launcher","getView()....!  position = " + position + "  convertView= " +convertView
+				+"  parent="+parent);
 		
 		return convertView;
 	}
@@ -99,6 +111,30 @@ public class XGDAllAppGridViewAdapter extends BaseAdapter {
 		public ImageView itemBg;
 		public ImageView itemIcon;
 		public TextView itemTitle;
+		
+		public void setVisible(int visible){
+			itemBg.setVisibility(visible);
+			itemIcon.setVisibility(visible);
+			itemTitle.setVisibility(visible);
+			Log.v("deng-Launcher", "set Visible------");
+		}
+		
 	}
+	
+	public boolean isVisible() {
+		return isVisible;
+	}
+	
+	public void setVisible(boolean visible) {
+		isVisible = visible;
+	}
+	
+	public void setItemVisible(int visible, int page, int position){
+		itemVisiblePage = page;
+		itemVisiblePosition = position;
+		itemVisible = visible;
+	}
+	
+	
 
 }
