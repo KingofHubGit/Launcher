@@ -256,12 +256,14 @@ public class XGDAllAppGridView extends GridView implements AdapterView.OnItemLon
         if (tempPosition == position || tempPosition == GridView.INVALID_POSITION) {
         	mGridViewAdapter.setItemVisible(View.VISIBLE,AppApplication.getCurrentPager(), position);
         	mGridViewAdapter.getView(position, view, parent); 
-        	Log.v("dengtl","  itemDrop =====5=====   setVisible! ");
+        	Log.v("dengtl","  itemDrop =====5$$$$=====   setVisible! ");
         } else {
+        	Log.v("dengtl","  itemDrop =====6=====   exchangePosition! ");
             ListAdapter adapter = getAdapter();
             if (adapter != null && adapter instanceof XGDAllAppGridViewAdapter) {
-                ((XGDAllAppGridViewAdapter) adapter).exchangePosition(position, tempPosition, false);
-                Log.v("dengtl","  itemDrop =====6=====   exchangePosition! ");
+                ((XGDAllAppGridViewAdapter) adapter).exchangePosition(position, tempPosition, true);
+                mGridViewAdapter.setItemVisible(View.VISIBLE,AppApplication.getCurrentPager(), position);
+                mGridViewAdapter.getView(position, view, parent); 
             }
         }
     }

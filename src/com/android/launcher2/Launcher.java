@@ -71,7 +71,7 @@ OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, android.view.V
 	private List<View> mLists;
 	public static XGDAllAppViewPager mViewPager;
 	FrameLayout mFirstLayout;
-	private List<AppItem> appList = new ArrayList<AppItem>();	
+	public static List<AppItem> appList = new ArrayList<AppItem>();	
 	private int mPageindex = 0;
 	private final int NUM_COLUMNS = 2;
 	private static final String FLASH_PLAYER = "com.adobe.flashplayer";
@@ -170,7 +170,12 @@ OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, android.view.V
 		filter.addAction(Intent.ACTION_PACKAGE_REMOVED);
 		filter.addAction(Intent.ACTION_PACKAGE_CHANGED);
 		filter.addDataScheme("package");
+		
 		registerReceiver(mReceiver, filter);
+		
+		IntentFilter drag_filter = new IntentFilter();
+		drag_filter.addAction("android.intent.action.ACTION_XGD_ICON_DRAG");
+		registerReceiver(dragReceiver, drag_filter);		
 		
 	}
 
@@ -287,7 +292,7 @@ OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, android.view.V
 			
 	        List<ResolveInfo> resolveInfos = pm.queryIntentActivities(intent, 0);  
 //        	Collections.sort(resolveInfos,new ResolveInfo.DisplayNameComparator(pm));  
-	        if (appList != null) {  
+	        if (appList != null && !AppApplication.isMove) {
 	        	appList.clear();  
 	        	for (ResolveInfo reInfo : resolveInfos) {  
 	        		String className = reInfo.activityInfo.name; 
@@ -530,9 +535,23 @@ OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, android.view.V
 		public void onReceive(Context context, Intent intent) {
 			if (intent.getAction().equals("android.intent.action.PACKAGE_ADDED") ||
 				intent.getAction().equals("android.intent.action.PACKAGE_REMOVED") ||
-				intent.getAction().equals("android.intent.action.ACTION_PACKAGE_CHANGED")) {
+				intent.getAction().equals("android.intent.action.ACTION_PACKAGE_CHANGED") ||
+				intent.getAction().equals("android.intent.action.ACTION_XGD_ICON_DRAG") ) {
+				Log.v("dengtl-exchangePosition","onCreateAppView  getAction is : " 
+						+ intent.getAction());
 				final String packageName = intent.getDataString().substring(8);
 				Log.d("AllAppActivity", intent.getAction() + packageName);
+				onCreateAppView();
+			}
+		}
+	};
+	
+	private BroadcastReceiver dragReceiver = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			if (intent.getAction().equals("android.intent.action.ACTION_XGD_ICON_DRAG")) {
+				Log.v("dengtl-exchangePosition","onCreateAppView  getAction is : " 
+						+ intent.getAction());
 				onCreateAppView();
 			}
 		}

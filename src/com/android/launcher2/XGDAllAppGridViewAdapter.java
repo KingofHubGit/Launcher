@@ -1,10 +1,12 @@
 package com.android.launcher2;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,16 +24,20 @@ public class XGDAllAppGridViewAdapter extends BaseAdapter {
 
 	private Context mContext;
 	private List<AppItem> mList = new ArrayList<AppItem>();
+	private List<AppItem> appList;
 	private int selected = -1;
 	private LayoutInflater mInflater;
 	boolean isVisible = true;
 	private static int itemVisiblePosition = -1;
 	private static int itemVisiblePage = -1;
 	private static int itemVisible = -1;
+	
 	private int movePosition = -1;
+	private boolean isMove = false;
 
 	public XGDAllAppGridViewAdapter(Context pContext, List<AppItem> list, int page) {
 		this.mContext = pContext;
+		this.appList = list;
 		mInflater = LayoutInflater.from(mContext);
 		int pageSize = pContext.getResources().getInteger(R.integer.xgd_config_page_size);
 		int i = page * pageSize-2;
@@ -93,7 +99,13 @@ public class XGDAllAppGridViewAdapter extends BaseAdapter {
 			holder.setVisible(itemVisible);
 			Log.v("deng-Launcher","set item Visible!=======");
 		}
-		if (selected == position) {		
+		
+        if( isMove) {
+            holder.setVisible(View.VISIBLE);
+            Log.v("dengtl","%%%%+++++++setVisibility : " + position);
+        }
+        
+		if(selected == position) {		
 			Animation animation = AnimationUtils.loadAnimation(mContext,R.anim.app_item_zoomout);
 			convertView.startAnimation(animation);
 			Log.v("deng-Launcher"," selected == position done!");
@@ -153,19 +165,40 @@ public class XGDAllAppGridViewAdapter extends BaseAdapter {
 		 		Log.v("dengtl","=====7=====exchangePosition  0  original id = " + originalId);
 		 		Log.v("dengtl","=====7=====exchangePosition  0  now id = " + nowId);
 		 	}else{
-		 		originalId = (originalPosition+4+(currentPage -1)*6+1);
-		 		nowId = (nowPosition+4+(currentPage -1)*6+1);
+		 		originalId = (originalPosition+4+(currentPage -1)*6);
+		 		nowId = (nowPosition+4+(currentPage -1)*6);
+
 		 		Log.v("dengtl","=====7=====exchangePosition  else  original id = " + originalId);
 		 		Log.v("dengtl","=====7=====exchangePosition  else  now id = " + nowId);
 		 	}
-		 	List<AppItem> mList = new ArrayList<AppItem>();
 		 	
-/*		 	AppItem t = mList.get(originalId);
-		 	mList.remove(originalId);
-		 	mList.add(nowId, t);
+		 	/*AppItem t = appList.get(originalId);
+		 	
+		 	Log.v("dengtl-exchangePosition"," old $$$$ Position = " + t.getAppPosition()
+		 			+" $$$$ Name = " + t.getName());
+		 	
+		 	appList.remove(originalId);
+		 	
+		 	appList.add(nowId, t);
+		 	Log.v("dengtl-exchangePosition"," new $$$$ Position = " + appList.get(nowId).getAppPosition()
+		 			+" $$$$ Name = " + appList.get(nowId).getName());
+		 	*/
 		 	//movePosition = nowId;
+		 	this.isMove = isMove;
+		 	AppApplication.isMove = isMove;
+		 	Collections.swap(appList,originalId,nowId);
+		 	Log.v("dengtl-exchangePosition"," old $$$$ Position = " + appList.get(originalId).getAppPosition()
+		 			+" $$$$ Name = " + appList.get(originalId).getName());		 	
+		 	Log.v("dengtl-exchangePosition"," new $$$$ Position = " + appList.get(nowId).getAppPosition()
+		 			+" $$$$ Name = " + appList.get(nowId).getName());
+		 	//movePosition = originalId;
 		 	//this.isMove = isMove;
-		 	notifyDataSetChanged();*/
+
+		 	notifyDataSetChanged();
+		 	
+		 	Intent intent = new Intent();  
+		 	intent.setAction("android.intent.action.ACTION_XGD_ICON_DRAG");  
+		 	mContext.sendBroadcast(intent);  
 		 	
 	 }
 	
