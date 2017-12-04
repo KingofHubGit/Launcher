@@ -149,14 +149,14 @@ public class XGDAllAppGridViewAdapter extends BaseAdapter {
 	}
 	
 	
-	 public void exchangePosition(int originalPosition, int nowPosition, boolean isMove) {
+	 public void exchangePosition(int originalId, int nowId, boolean isMove) {
 	        /*T t = list.get(originalPosition);
 	        list.remove(originalPosition);
 	        list.add(nowPosition, t);
 	        movePosition = nowPosition;
 	        this.isMove = isMove;
 	        notifyDataSetChanged();*/
-		 	int originalId,nowId;
+		 	/*int originalId,nowId;
 		 	if( Launcher.mPageindex == 0 ){
 		 		originalId = originalPosition;
 		 		nowId = nowPosition;
@@ -168,7 +168,7 @@ public class XGDAllAppGridViewAdapter extends BaseAdapter {
 
 		 		Log.v("dengtl","=====7=====exchangePosition  else  original id = " + originalId);
 		 		Log.v("dengtl","=====7=====exchangePosition  else  now id = " + nowId);
-		 	}
+		 	}*/
 		 	
 		 	/*AppItem t = appList.get(originalId);
 		 	
