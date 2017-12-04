@@ -186,11 +186,36 @@ public class XGDAllAppGridViewAdapter extends BaseAdapter {
 		 	//movePosition = nowId;
 		 	this.isMove = isMove;
 		 	AppApplication.isMove = isMove;
-		 	Collections.swap(appList,originalId,nowId);
+		 	
+		 	if(originalId < nowId ){
+		 		for(int i = originalId ; i < nowId ; i++){
+		 			Collections.swap(appList,i,i+1);
+				 	Log.v("dengtl-exchangePosition"," old $$$$ Position = " + appList.get(originalId).getAppPosition()
+				 			+" $$$$ Name = " + appList.get(originalId).getName()
+				 			+" #### i = " + i);		 	
+				 	Log.v("dengtl-exchangePosition"," new $$$$ Position = " + appList.get(nowId).getAppPosition()
+				 			+" $$$$ Name = " + appList.get(nowId).getName()
+				 			+" #### i = " + i);
+		 		}
+		 	}else{
+		 		for(int i = originalId ; i > nowId ; i--){
+		 			Collections.swap(appList,i,i-1);
+				 	Log.v("dengtl-exchangePosition"," old $$$$ Position = " + appList.get(originalId).getAppPosition()
+				 			+" $$$$ Name = " + appList.get(originalId).getName()
+				 			+" #### i = " + i);		 	
+				 	Log.v("dengtl-exchangePosition"," new $$$$ Position = " + appList.get(nowId).getAppPosition()
+				 			+" $$$$ Name = " + appList.get(nowId).getName()
+				 			+" #### i = " + i);
+		 		}
+		 		
+		 	}
+		 	
+		 	
+		 	/*Collections.swap(appList,originalId,nowId);
 		 	Log.v("dengtl-exchangePosition"," old $$$$ Position = " + appList.get(originalId).getAppPosition()
 		 			+" $$$$ Name = " + appList.get(originalId).getName());		 	
 		 	Log.v("dengtl-exchangePosition"," new $$$$ Position = " + appList.get(nowId).getAppPosition()
-		 			+" $$$$ Name = " + appList.get(nowId).getName());
+		 			+" $$$$ Name = " + appList.get(nowId).getName());*/
 		 	//movePosition = originalId;
 		 	//this.isMove = isMove;
 
