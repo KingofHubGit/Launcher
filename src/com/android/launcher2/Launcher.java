@@ -72,7 +72,7 @@ OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, android.view.V
 	public static XGDAllAppViewPager mViewPager;
 	FrameLayout mFirstLayout;
 	public static List<AppItem> appList = new ArrayList<AppItem>();	
-	private int mPageindex = 0;
+	public static int mPageindex = 0;
 	private final int NUM_COLUMNS = 2;
 	private static final String FLASH_PLAYER = "com.adobe.flashplayer";
 	private static final String HIDE_LIST_PATH = "/private/config/hidelist.cfg";

@@ -156,17 +156,15 @@ public class XGDAllAppGridViewAdapter extends BaseAdapter {
 	        movePosition = nowPosition;
 	        this.isMove = isMove;
 	        notifyDataSetChanged();*/
-		 	int currentPage = AppApplication.getCurrentPager();
 		 	int originalId,nowId;
-		 	int id;
-		 	if(currentPage == 0){
+		 	if( Launcher.mPageindex == 0 ){
 		 		originalId = originalPosition;
 		 		nowId = nowPosition;
 		 		Log.v("dengtl","=====7=====exchangePosition  0  original id = " + originalId);
 		 		Log.v("dengtl","=====7=====exchangePosition  0  now id = " + nowId);
 		 	}else{
-		 		originalId = (originalPosition+4+(currentPage -1)*6);
-		 		nowId = (nowPosition+4+(currentPage -1)*6);
+		 		originalId = (originalPosition+4+(Launcher.mPageindex -1)*6);
+		 		nowId = (nowPosition+4+(Launcher.mPageindex -1)*6);
 
 		 		Log.v("dengtl","=====7=====exchangePosition  else  original id = " + originalId);
 		 		Log.v("dengtl","=====7=====exchangePosition  else  now id = " + nowId);

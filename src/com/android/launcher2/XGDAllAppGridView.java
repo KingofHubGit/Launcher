@@ -115,7 +115,13 @@ public class XGDAllAppGridView extends GridView implements AdapterView.OnItemLon
         this.position = position;
         this.tempPosition = position;
         mX = mWindowX - view.getLeft() ;
-        mY = mWindowY - view.getTop() ;
+        if( Launcher.mPageindex == 0 ){
+        	mY = mWindowY - view.getTop() - getResources().getDimension(R.dimen.xgd_app_item_height) ;
+        	Log.v("dengtl","@@@@page  xgd_app_item_height = " + getResources().getDimension(R.dimen.xgd_app_item_height));
+        }else{
+        	mY = mWindowY - view.getTop() ;	
+        }
+        
         Log.v("dengtl","=====1===== onItemLongClick   view.getLeft() = " + view.getLeft() 
         		+ "  this.getLeft() = " + this.getLeft());
         Log.v("dengtl","=====1===== onItemLongClick   view.getTop() = " + view.getTop() 
@@ -222,6 +228,7 @@ public class XGDAllAppGridView extends GridView implements AdapterView.OnItemLon
         if (mode == MODE_DRAG) {
             float x = ev.getRawX() - mX;
             float y = ev.getRawY() - mY;
+                  	
             Log.v("dengtl","=====2===== updateWindow   mX = " + mX + "  mY = " + mY);
             Log.v("dengtl","=====2===== updateWindow   x = " + x + "  y = " + y);
             if (layoutParams != null) {
@@ -261,6 +268,7 @@ public class XGDAllAppGridView extends GridView implements AdapterView.OnItemLon
         	Log.v("dengtl","  itemDrop =====6=====   exchangePosition! ");
             ListAdapter adapter = getAdapter();
             if (adapter != null && adapter instanceof XGDAllAppGridViewAdapter) {
+            	Log.i("dengtl", "=====7=====exchangePosition : " + position + " , tempPosition : " + tempPosition);
                 ((XGDAllAppGridViewAdapter) adapter).exchangePosition(position, tempPosition, true);
                 mGridViewAdapter.setItemVisible(View.VISIBLE,AppApplication.getCurrentPager(), position);
                 mGridViewAdapter.getView(position, view, parent); 
