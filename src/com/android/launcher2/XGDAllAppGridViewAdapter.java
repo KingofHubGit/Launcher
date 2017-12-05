@@ -182,6 +182,9 @@ public class XGDAllAppGridViewAdapter extends BaseAdapter {
 		 			+" $$$$ Name = " + appList.get(nowId).getName());
 		 	*/
 		 	//movePosition = nowId;
+		 	if(originalId < 0 || nowId < 0){
+		 		return;
+		 	}
 		 	this.isMove = isMove;
 		 	AppApplication.isMove = isMove;
 		 	

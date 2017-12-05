@@ -41,7 +41,7 @@ public class XGDAllAppGridView extends GridView implements AdapterView.OnItemLon
     private View dragView;
     private boolean isMoving = false;
     private static boolean isPageChanged = false;
-
+    private static boolean isRightPageChanged = false;
    
     
     private WindowManager mWindowManager;
@@ -110,6 +110,7 @@ public class XGDAllAppGridView extends GridView implements AdapterView.OnItemLon
 	}
 	
 	public int  getAppListId(int position){
+		if(position < 0)return -1;
 		if( Launcher.mPageindex == 0 ){
 			return position;
 		}else{
@@ -191,6 +192,7 @@ public class XGDAllAppGridView extends GridView implements AdapterView.OnItemLon
             case MotionEvent.ACTION_UP:
                 if (mode == MODE_DRAG) {
                 	isPageChanged = false;
+                	isRightPageChanged = false;
                 	//mGridViewAdapter.setItemVisible(View.VISIBLE,AppApplication.getCurrentPager(), position);
                 	//mGridViewAdapter.getView(position, view, parent);               	
                     closeWindow(ev.getX(), ev.getY());
@@ -244,7 +246,7 @@ public class XGDAllAppGridView extends GridView implements AdapterView.OnItemLon
 		Log.v(TAG,"====updateWindow=====");
         if (mode == MODE_DRAG) {
         	
-        	if(ev.getRawX() < 50 && !isPageChanged){
+        	if(ev.getRawX() < 50 && !isPageChanged && Launcher.mPageindex!=0 ){
         		Launcher.mViewPager.setCurrentItem((Launcher.mPageindex-1),true);
         		/*new Handler().postDelayed(new Runnable(){    
         		    public void run() {    
@@ -252,14 +254,15 @@ public class XGDAllAppGridView extends GridView implements AdapterView.OnItemLon
         		    }    
         		 }, 5000L);*/
         		isPageChanged = true;
-        	}else if(ev.getRawX() > 650  && !isPageChanged){
+        	}else if(ev.getRawX() > 650  && !isRightPageChanged 
+        			&& (Launcher.mPageindex != (Launcher.PageCount-1)) ){
         		Launcher.mViewPager.setCurrentItem((Launcher.mPageindex+1),true);
         		/*new Handler().postDelayed(new Runnable(){    
         		    public void run() {    
         		    	//Launcher.mViewPager.setCurrentItem((Launcher.mPageindex+1),true);    
         		    }    
         		 }, 5000L);*/
-        		isPageChanged = true;
+        		isRightPageChanged = true;
         	}
         	
             float x = ev.getRawX() - mX;
@@ -277,20 +280,32 @@ public class XGDAllAppGridView extends GridView implements AdapterView.OnItemLon
             Log.v("dengtl","=====3===== updateWindow   mx = " + mx + "  my = " + my);
             if(isPageChanged){
             	mx = mx + getResources().getDimension(R.dimen.xgd_app_item_width)*2;//关键
-            	Log.v("dengtl","=====3@@@===== updateWindow  new mx = " + mx + " new my = " + my);
-            }           
+            }
+            if(isRightPageChanged){
+            	mx = mx - getResources().getDimension(R.dimen.xgd_app_item_width)*2;//关键
+            }
+            
+            Log.v("dengtl","=====3@@@===== updateWindow  new mx = " + mx + " new my = " + my);
             int dropPosition = pointToPosition((int) mx, (int) my);
-
+            if( isPageChanged && Launcher.mPageindex == 0 ){
+            	dropPosition = dropPosition - 2;
+            }
+            if( isRightPageChanged && Launcher.mPageindex == 1 ){
+            	dropPosition = dropPosition + 2;
+            }            
             int dropId = getAppListId(dropPosition);
             Log.i("dengtl", "=====4=====dropPosition : " + dropPosition
             		+ " , tempPosition : " + tempPosition
             		+ " , dropId : " + dropId);
-            if (dropId == tempListId || dropPosition == GridView.INVALID_POSITION) {
-                return;
-            }
+            
             Log.i("dengtl", "=====HHHH=====exchangePosition : " + listId + " , tempListId : " + tempListId);
             tempPosition = dropPosition;
             tempListId = dropId;
+            
+            if (dropId == tempListId || dropPosition == GridView.INVALID_POSITION) {
+                return;
+            }
+
             //itemMove(dropPosition);
         }
     }
@@ -306,7 +321,8 @@ public class XGDAllAppGridView extends GridView implements AdapterView.OnItemLon
     }
 
     private void itemDrop() {
-        if (tempListId == listId || tempPosition == GridView.INVALID_POSITION) {
+        if (tempListId == listId || tempPosition == GridView.INVALID_POSITION
+        		|| tempListId <0 || listId <0 || tempListId == -1) {
         	mGridViewAdapter.setItemVisible(View.VISIBLE,AppApplication.getCurrentPager(), position);
         	mGridViewAdapter.getView(position, view, parent); 
         	Log.v("dengtl","  itemDrop =====5$$$$=====   setVisible! ");

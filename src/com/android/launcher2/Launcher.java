@@ -73,6 +73,7 @@ OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, android.view.V
 	FrameLayout mFirstLayout;
 	public static List<AppItem> appList = new ArrayList<AppItem>();	
 	public static int mPageindex = 0;
+	public static int PageCount;
 	private final int NUM_COLUMNS = 2;
 	private static final String FLASH_PLAYER = "com.adobe.flashplayer";
 	private static final String HIDE_LIST_PATH = "/private/config/hidelist.cfg";
@@ -330,7 +331,7 @@ OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, android.view.V
 	        }
 	        int pageSize = getResources().getInteger(R.integer.xgd_config_page_size);
 	        //first page four items
-			final int PageCount = (int) Math.ceil((appList.size() - 4) / (float)pageSize + 1);
+			PageCount = (int) Math.ceil((appList.size() - 4) / (float)pageSize + 1);
 			mLists = new ArrayList<View>();
 
 			for (int i = 0; i < PageCount; i++) {
