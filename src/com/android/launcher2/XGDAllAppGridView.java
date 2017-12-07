@@ -247,7 +247,7 @@ public class XGDAllAppGridView extends GridView implements AdapterView.OnItemLon
 		Log.v(TAG,"====updateWindow=====");
         if (mode == MODE_DRAG) {
         	
-        	if(ev.getRawX() < 50 && !isPageChanged && Launcher.mPageindex!=0 ){
+        	if(ev.getRawX() < 40 && !isPageChanged && Launcher.mPageindex!=0 ){
         		Launcher.mViewPager.setCurrentItem((Launcher.mPageindex-1),true);
         		/*new Handler().postDelayed(new Runnable(){    
         		    public void run() {    
@@ -255,7 +255,7 @@ public class XGDAllAppGridView extends GridView implements AdapterView.OnItemLon
         		    }    
         		 }, 5000L);*/
         		isPageChanged = true;
-        	}else if(ev.getRawX() > 650  && !isRightPageChanged 
+        	}else if(ev.getRawX() > 680  && !isRightPageChanged 
         			&& (Launcher.mPageindex != (Launcher.PageCount-1)) ){
         		if(Launcher.mPageindex == 0 && ev.getRawY() < (getResources().getDimension(R.dimen.xgd_app_item_height)+20) ){
         			
@@ -309,10 +309,6 @@ public class XGDAllAppGridView extends GridView implements AdapterView.OnItemLon
             tempListId = dropId;
             if(tempListId > Launcher.appList.size()-1){
             	tempListId = Launcher.appList.size()-1;
-            }
-            
-            if (dropId == tempListId || dropPosition == GridView.INVALID_POSITION) {
-                return;
             }
 
             //itemMove(dropPosition);

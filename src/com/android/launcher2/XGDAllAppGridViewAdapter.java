@@ -190,7 +190,7 @@ public class XGDAllAppGridViewAdapter extends BaseAdapter {
 		 	this.isMove = isMove;
 		 	AppApplication.isMove = isMove;
 		 	
-		 	if(originalId < nowId ){
+		 	/*if(originalId < nowId ){
 		 		for(int i = originalId ; i < nowId ; i++){
 		 			Collections.swap(appList,i,i+1);
 				 	Log.v("dengtl-exchangePosition"," old $$$$ Position = " + appList.get(originalId).getAppPosition()
@@ -212,7 +212,10 @@ public class XGDAllAppGridViewAdapter extends BaseAdapter {
 				 			+" #### i = " + i);
 		 		}
 		 		
-		 	}
+		 	}*/
+		 	AppItem t = appList.get(originalId);
+		 	appList.remove(originalId);
+		 	appList.add(nowId, t);
 		 	
 		 	
 		 	/*Collections.swap(appList,originalId,nowId);
