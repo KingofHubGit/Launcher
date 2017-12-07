@@ -231,6 +231,16 @@ public class XGDAllAppGridViewAdapter extends BaseAdapter {
 			editor.commit();
 			Log.d("dengtlong", "saved json is done! ");*/
 		 	
+			SharedPreferences.Editor editor = mContext.getSharedPreferences("AppListData", Context.MODE_PRIVATE).edit();
+			editor.putInt("AppListNums", appList.size());
+			for (int i = 0; i < appList.size(); i++)
+			{
+			    editor.putString("position_"+i, appList.get(i).getName());
+			    Log.d("dengtlong", "i = " + i + "  : " + appList.get(i).getName());
+			}
+			editor.commit();
+			Log.d("dengtlong","=========dfsf=====");
+		 	
 		 	notifyDataSetChanged();
 		 	
 		 	Intent intent = new Intent();  

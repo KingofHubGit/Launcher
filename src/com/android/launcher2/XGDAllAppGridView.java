@@ -257,13 +257,18 @@ public class XGDAllAppGridView extends GridView implements AdapterView.OnItemLon
         		isPageChanged = true;
         	}else if(ev.getRawX() > 650  && !isRightPageChanged 
         			&& (Launcher.mPageindex != (Launcher.PageCount-1)) ){
-        		Launcher.mViewPager.setCurrentItem((Launcher.mPageindex+1),true);
-        		/*new Handler().postDelayed(new Runnable(){    
-        		    public void run() {    
-        		    	//Launcher.mViewPager.setCurrentItem((Launcher.mPageindex+1),true);    
-        		    }    
-        		 }, 5000L);*/
-        		isRightPageChanged = true;
+        		if(Launcher.mPageindex == 0 && ev.getRawY() < (getResources().getDimension(R.dimen.xgd_app_item_height)+20) ){
+        			
+        		}else{
+        			Launcher.mViewPager.setCurrentItem((Launcher.mPageindex+1),true);
+	        		/*new Handler().postDelayed(new Runnable(){    
+	        		    public void run() {    
+	        		    	//Launcher.mViewPager.setCurrentItem((Launcher.mPageindex+1),true);    
+	        		    }    
+	        		 }, 5000L);*/
+	        		isRightPageChanged = true;
+        		}
+        		
         	}
         	
             float x = ev.getRawX() - mX;

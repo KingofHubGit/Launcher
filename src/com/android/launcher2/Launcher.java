@@ -74,6 +74,7 @@ OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, android.view.V
 	private static final String HIDE_LIST_PATH = "/private/config/hidelist.cfg";
 	private List<AppItem> systemAList;
 	private List<AppItem> userAppList;
+	private static String[] pkgName;
 	
 	private static int[] mBgCorlorArray = {
 			R.drawable.bg_purple,R.drawable.bg_blue, 	//1-2
@@ -110,43 +111,43 @@ OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, android.view.V
                 if(isFlm()){
                     //付临门定制设置和时钟对调
                     put(("com.android.settings_com.android.settings.Settings"), new Integer[]
-                            {3,R.drawable.ic_settings});
+                            {3,R.drawable.ic_settings,R.drawable.bg_purple});
                     put("com.android.deskclock_com.android.deskclock.DeskClock",new Integer[]
-                            {2,R.drawable.ic_clock});
+                            {2,R.drawable.ic_clock,R.drawable.bg_blue});
                     put("com.android.calculator2_com.android.calculator2.Calculator", new Integer[]
-                            {1,R.drawable.ic_calculate});
+                            {1,R.drawable.ic_calculate,R.drawable.bg_red});
                 }else{
                     put(("com.android.settings_com.android.settings.Settings"), new Integer[]
-                            {1,R.drawable.ic_settings});
+                            {1,R.drawable.ic_settings,R.drawable.bg_purple});
                     put("com.android.deskclock_com.android.deskclock.DeskClock",new Integer[]
-                            {2,R.drawable.ic_clock});
+                            {2,R.drawable.ic_clock,R.drawable.bg_blue});
                     put("com.android.calculator2_com.android.calculator2.Calculator", new Integer[]
-                            {3,R.drawable.ic_calculate});
+                            {3,R.drawable.ic_calculate,R.drawable.bg_red});
                 }
 		        put("com.xgd.update_com.xgd.update.UpdateActivity", new Integer[]
-		        		{4,R.drawable.ic_update});
+		        		{4,R.drawable.ic_update,R.drawable.bg_green});
 		        put("com.android.music_com.android.music.MusicBrowserActivity", new Integer[]
-		        		{5, R.drawable.ic_music});
+		        		{5, R.drawable.ic_music,R.drawable.bg_purple});
 		        put("com.android.music_com.android.music.VideoBrowserActivity", new Integer[]
-		        		{6, R.drawable.ic_video});
+		        		{6, R.drawable.ic_video,R.drawable.bg_yellow});
 		        put("com.softwinner.explore_com.softwinner.explore.Main", new Integer[]
-		        		{7, R.drawable.ic_file});
+		        		{7, R.drawable.ic_file,R.drawable.bg_blue});
 		        put("com.android.calendar_com.android.calendar.AllInOneActivity", new Integer[]
-		        		{8, R.drawable.ic_calendar});
+		        		{8, R.drawable.ic_calendar,R.drawable.bg_green});
 		        put("com.android.camera2_com.android.camera.CameraLauncher", new Integer[]
-		        		{9, R.drawable.ic_camera});
+		        		{9, R.drawable.ic_camera,R.drawable.bg_yellow});
 		        put("com.android.gallery3d_com.android.gallery3d.app.GalleryActivity", new Integer[]
-		        		{10, R.drawable.ic_gallery});
+		        		{10, R.drawable.ic_gallery,R.drawable.bg_red});
 		        put("com.android.providers.downloads.ui_com.android.providers.downloads.ui.DownloadList", new Integer[]
-		        		{11, R.drawable.ic_download});
+		        		{11, R.drawable.ic_download,R.drawable.bg_blue});
 		        put("com.android.soundrecorder_com.android.soundrecorder.SoundRecorder", new Integer[]
-		        		{12, R.drawable.ic_voice});
+		        		{12, R.drawable.ic_voice,R.drawable.bg_yellow});
 		        put("com.xgd.ophelp_com.xgd.ophelp.MainActivity", new Integer[]
-		        		{13, R.drawable.ic_help});
+		        		{13, R.drawable.ic_help,R.drawable.bg_green});
 		        put("com.android.quicksearchbox_com.android.quicksearchbox.SearchActivity", new Integer[]
-		        		{14, R.drawable.ic_search});
+		        		{14, R.drawable.ic_search,R.drawable.bg_purple});
 		        put("com.android.settings_com.android.settings.Settings$TetherSettingsActivity", new Integer[]
-		        		{15, R.drawable.ic_share_network});
+		        		{15, R.drawable.ic_share_network,R.drawable.bg_purple});
 		        
 		}
 	};
@@ -286,7 +287,7 @@ OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, android.view.V
                 hideList.add("com.android.contacts_com.android.contacts.activities.PeopleActivity");
             }
 			
-            SharedPreferences preferAppList = getSharedPreferences("AppList", MODE_PRIVATE);
+            /*SharedPreferences preferAppList = getSharedPreferences("AppList", MODE_PRIVATE);
             String appListJson = preferAppList.getString("AppItemJson", null);
             if (appListJson != null)
             {
@@ -301,13 +302,12 @@ OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, android.view.V
                 }
             }else{
             	Log.d("dengtlong", "saved json is null! ");
-            }
-            
-            
-            
+            }*/
+            SharedPreferences appListPreference = getSharedPreferences("AppListData", MODE_PRIVATE);
+            int appListNums = appListPreference.getInt("AppListNums", 0);
 	        List<ResolveInfo> resolveInfos = pm.queryIntentActivities(intent, 0);  
 //        	Collections.sort(resolveInfos,new ResolveInfo.DisplayNameComparator(pm));  
-	        if (appList != null && !AppApplication.isMove && appListJson == null) {
+	        if (appList != null && !AppApplication.isMove && appListNums <=0 ) {
 	        	appList.clear();  
 	        	for (ResolveInfo reInfo : resolveInfos) {  
 	        		String className = reInfo.activityInfo.name; 
@@ -341,8 +341,57 @@ OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, android.view.V
 	        	Collections.sort(systemAList,comp);
 	        	appList.addAll(systemAList);
 	        	appList.addAll(userAppList);
+	        	Log.d("dengtlong","======this0=====");
 	        	
+	        }else if(appList != null && !AppApplication.isMove && appListNums>0 ) {
+
+	            //SharedPreferences appListPreference = getSharedPreferences("AppListData", MODE_PRIVATE);
+	            //int appListNums = appListPreference.getInt("AppListNums", 0);
+	            pkgName = new String[appListNums];
+		        for(int i = 0; i < appListNums; i++)
+	            {
+	                pkgName[i] = appListPreference.getString("position_"+i, null);
+	                Log.d("dengtlong", "  NO."+i + " : " + pkgName[i] );
+	            }
+
+		        for (ResolveInfo reInfo : resolveInfos) {  
+	        		String className = reInfo.activityInfo.name; 
+	        		String packageName = reInfo.activityInfo.packageName;
+	        		String clpaName = packageName + "_"+ className;
+					
+	        		//过滤相关包名
+	        		if(hideList.contains(clpaName)){
+	        			continue;
+	        		}
+	    			AppItem appInfo = new AppItem();             		
+	        		appInfo.setPackageName(packageName);
+					appInfo.setClassName(className);
+					appInfo.setAppName((String) reInfo.loadLabel(pm));
+					Log.i("deng", "packageName_className:" + packageName + "_"+ className);
+					
+					int index = getPkgIndex(pkgName,appInfo.getName());
+					if( index != -1 ){
+						appInfo.setAppPosition(index+1);
+						
+						if(appMap.get(appInfo.getName()) != null){
+							appInfo.setAppBg(getBaseContext().getResources().getDrawable(appMap.get(appInfo.getName())[2]));
+							appInfo.setAppIcon(getBaseContext().getResources().getDrawable(appMap.get(appInfo.getName())[1]));
+						}else{
+							appInfo.setAppBg(getBaseContext().getResources().getDrawable(R.drawable.bg_gray));
+							appInfo.setAppIcon(reInfo.loadIcon(pm));
+						}
+					}else{
+						Log.i("deng", "======continue" );
+						continue;
+					}
+					appList.add(appInfo);
+					Log.i("deng", "======package added!" );
+	        	}
+	        	Comparator comp = new SortComparator();
+	        	Collections.sort(appList,comp);
+	        	Log.d("dengtlong","======this1=====");
 	        }
+	        
 	        int pageSize = getResources().getInteger(R.integer.xgd_config_page_size);
 	        //first page four items
 			PageCount = (int) Math.ceil((appList.size() - 4) / (float)pageSize + 1);
@@ -410,6 +459,16 @@ OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, android.view.V
 			mViewPager.setScroll(AppApplication.getDragStatus());
 			AppApplication.isMove = false;
 	}
+	
+	public static int getPkgIndex(String[] strs,String s){ 
+		
+		for(int i=0;i<strs.length;i++){ 
+			if(strs[i].equals(s)){
+				return i;
+			} 
+		} 
+		return -1;
+	} 
 	
 	public class SortComparator implements Comparator {  
 	    @Override  
@@ -565,6 +624,16 @@ OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, android.view.V
 				editor.putString("AppItemJson", json);
 				editor.commit();
 				Log.d("dengtlong", "saved json is done! ");*/
+				
+/*				SharedPreferences.Editor editor = getSharedPreferences("AppListData", MODE_PRIVATE).edit();
+				editor.putInt("AppListNums", appList.size());
+				for (int i = 0; i < appList.size(); i++)
+				{
+				    editor.putString("position_"+i, appList.get(i).getName());
+				    Log.d("dengtlong", "i = " + i + "  : " + appList.get(i).getName());
+				}
+				editor.commit();
+				Log.d("dengtlong","=========dfsf=====");*/
 				
 				onCreateAppView();
 			}
