@@ -7,6 +7,7 @@ import java.util.List;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.launcher.R;
+import com.google.gson.Gson;
 
 public class XGDAllAppGridViewAdapter extends BaseAdapter {
 
@@ -197,6 +199,7 @@ public class XGDAllAppGridViewAdapter extends BaseAdapter {
 				 	Log.v("dengtl-exchangePosition"," new $$$$ Position = " + appList.get(nowId).getAppPosition()
 				 			+" $$$$ Name = " + appList.get(nowId).getName()
 				 			+" #### i = " + i);
+				 	
 		 		}
 		 	}else{
 		 		for(int i = originalId ; i > nowId ; i--){
@@ -220,6 +223,14 @@ public class XGDAllAppGridViewAdapter extends BaseAdapter {
 		 	//movePosition = originalId;
 		 	//this.isMove = isMove;
 
+/*		 	SharedPreferences.Editor editor = mContext.getSharedPreferences("AppList", Context.MODE_PRIVATE).edit();
+			Gson gson = new Gson();
+			String json = gson.toJson(appList);
+			Log.d("dengtlong", "saved json is "+ json);
+			editor.putString("AppItemJson", json);
+			editor.commit();
+			Log.d("dengtlong", "saved json is done! ");*/
+		 	
 		 	notifyDataSetChanged();
 		 	
 		 	Intent intent = new Intent();  

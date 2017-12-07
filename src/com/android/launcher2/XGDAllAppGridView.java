@@ -236,6 +236,7 @@ public class XGDAllAppGridView extends GridView implements AdapterView.OnItemLon
             layoutParams.height = view.getHeight();
             layoutParams.x = view.getLeft();
             layoutParams.y = view.getTop();  
+            layoutParams.alpha = 0.6f;
         }
 
         mWindowManager.addView(dragView, layoutParams);
@@ -301,6 +302,9 @@ public class XGDAllAppGridView extends GridView implements AdapterView.OnItemLon
             Log.i("dengtl", "=====HHHH=====exchangePosition : " + listId + " , tempListId : " + tempListId);
             tempPosition = dropPosition;
             tempListId = dropId;
+            if(tempListId > Launcher.appList.size()-1){
+            	tempListId = Launcher.appList.size()-1;
+            }
             
             if (dropId == tempListId || dropPosition == GridView.INVALID_POSITION) {
                 return;
@@ -323,6 +327,7 @@ public class XGDAllAppGridView extends GridView implements AdapterView.OnItemLon
     private void itemDrop() {
         if (tempListId == listId || tempPosition == GridView.INVALID_POSITION
         		|| tempListId <0 || listId <0 || tempListId == -1) {
+        	Log.v("dengtl","   Launcher.appList.size() =  " +  Launcher.appList.size());
         	mGridViewAdapter.setItemVisible(View.VISIBLE,AppApplication.getCurrentPager(), position);
         	mGridViewAdapter.getView(position, view, parent); 
         	Log.v("dengtl","  itemDrop =====5$$$$=====   setVisible! ");

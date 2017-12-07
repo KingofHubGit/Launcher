@@ -1,6 +1,13 @@
 package com.android.launcher2;
 
+import java.io.DataInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -8,17 +15,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.android.launcher.R;
-import com.android.launcher2.AppItem;
-
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.provider.Settings;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -26,14 +25,14 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.ResolveInfo;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.view.ViewPager;
+import android.provider.Settings;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -41,20 +40,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemLongClickListener;
-import android.widget.FrameLayout;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.Toast;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-
-import java.io.BufferedInputStream;
-import java.io.DataInputStream;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import com.android.launcher.R;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 /** 
  * 
@@ -291,9 +286,28 @@ OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, android.view.V
                 hideList.add("com.android.contacts_com.android.contacts.activities.PeopleActivity");
             }
 			
+            SharedPreferences preferAppList = getSharedPreferences("AppList", MODE_PRIVATE);
+            String appListJson = preferAppList.getString("AppItemJson", null);
+            if (appListJson != null)
+            {
+                Gson gson = new Gson();
+                Type type = new TypeToken<List<AppItem>>(){}.getType();
+                //List<AppItem> appListData = new ArrayList<AppItem>();
+                appList = gson.fromJson(appListJson, type);
+                for(int i = 0; i < appList.size(); i++)
+                {
+                    Log.d("dengtlong", appList.get(i).getName()+" : " 
+                    		+ appList.get(i).getAppPosition());
+                }
+            }else{
+            	Log.d("dengtlong", "saved json is null! ");
+            }
+            
+            
+            
 	        List<ResolveInfo> resolveInfos = pm.queryIntentActivities(intent, 0);  
 //        	Collections.sort(resolveInfos,new ResolveInfo.DisplayNameComparator(pm));  
-	        if (appList != null && !AppApplication.isMove) {
+	        if (appList != null && !AppApplication.isMove && appListJson == null) {
 	        	appList.clear();  
 	        	for (ResolveInfo reInfo : resolveInfos) {  
 	        		String className = reInfo.activityInfo.name; 
@@ -309,7 +323,7 @@ OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, android.view.V
     				appInfo.setClassName(className);
     				appInfo.setAppName((String) reInfo.loadLabel(pm));
 //	    				appInfo.setAppIcon(reInfo.loadIcon(pm));
-    				Log.i("[gx]", "packageName_className:" + packageName + "_"+ className);
+    				Log.i("deng", "packageName_className:" + packageName + "_"+ className);
     				if(appMap.get(appInfo.getName()) != null){
     					appInfo.setAppPosition(appMap.get(appInfo.getName())[0].intValue());
     					appInfo.setAppBg(getBaseContext().getResources().getDrawable(mBgCorlorArray[appInfo.getAppPosition()-1]));
@@ -394,6 +408,7 @@ OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, android.view.V
 			mViewPager.setCurrentItem(mPageindex);
 			mViewPager.invalidate();
 			mViewPager.setScroll(AppApplication.getDragStatus());
+			AppApplication.isMove = false;
 	}
 	
 	public class SortComparator implements Comparator {  
@@ -542,6 +557,15 @@ OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, android.view.V
 						+ intent.getAction());
 				final String packageName = intent.getDataString().substring(8);
 				Log.d("AllAppActivity", intent.getAction() + packageName);
+				
+				/*SharedPreferences.Editor editor = getSharedPreferences("AppList", MODE_PRIVATE).edit();
+				Gson gson = new Gson();
+				String json = gson.toJson(appList);
+				Log.d("dengtlong", "saved json is "+ json);
+				editor.putString("AppItemJson", json);
+				editor.commit();
+				Log.d("dengtlong", "saved json is done! ");*/
+				
 				onCreateAppView();
 			}
 		}
