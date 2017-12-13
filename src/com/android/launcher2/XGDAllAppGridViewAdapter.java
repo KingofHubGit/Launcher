@@ -1,7 +1,6 @@
 package com.android.launcher2;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import android.annotation.SuppressLint;
@@ -19,7 +18,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.launcher.R;
-import com.google.gson.Gson;
 
 public class XGDAllAppGridViewAdapter extends BaseAdapter {
 
@@ -188,7 +186,6 @@ public class XGDAllAppGridViewAdapter extends BaseAdapter {
 		 		return;
 		 	}
 		 	this.isMove = isMove;
-		 	AppApplication.isMove = isMove;
 		 	
 		 	/*if(originalId < nowId ){
 		 		for(int i = originalId ; i < nowId ; i++){

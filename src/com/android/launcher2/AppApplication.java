@@ -7,7 +7,6 @@ public class AppApplication extends Application {
 	private static AppApplication mAppApplication;
 	private static int mPageindex = -1;
 	private static boolean isDrag = true;
-	public static boolean isMove = false;
 
 	@Override
 	public void onCreate() {

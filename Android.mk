@@ -7,8 +7,7 @@ LOCAL_SRC_FILES := $(call all-java-files-under, src)
 
 
 LOCAL_STATIC_JAVA_LIBRARIES := \
-        android-support-v4 \
-		lib_gson_2_6_1
+        android-support-v4 
 
 LOCAL_PACKAGE_NAME := xgdLauncher 
 LOCAL_CERTIFICATE := platform
@@ -19,8 +18,6 @@ LOCAL_OVERRIDES_PACKAGES := Launcher2 \
 include $(BUILD_PACKAGE)
 
 include $(CLEAR_VARS)
-
-LOCAL_PREBUILT_STATIC_JAVA_LIBRARIES := lib_gson_2_6_1:libs/gson-2.6.1.jar
 
 
 include $(BUILD_MULTI_PREBUILT)
