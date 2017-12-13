@@ -238,7 +238,7 @@ public class XGDAllAppGridViewAdapter extends BaseAdapter {
 			editor.putInt("AppListNums", appList.size());
 			for (int i = 0; i < appList.size(); i++)
 			{
-			    editor.putString("position_"+i, appList.get(i).getName());
+			    editor.putInt(appList.get(i).getName(),(i+1));
 			    Log.d("dengtlong", "i = " + i + "  : " + appList.get(i).getName());
 			}
 			editor.commit();

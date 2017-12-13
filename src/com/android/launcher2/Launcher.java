@@ -344,15 +344,15 @@ OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, android.view.V
 	        	Log.d("dengtlong","======this0=====");
 	        	
 	        }else if(appList != null && !AppApplication.isMove && appListNums>0 ) {
-
+	        	appList.clear();
 	            //SharedPreferences appListPreference = getSharedPreferences("AppListData", MODE_PRIVATE);
 	            //int appListNums = appListPreference.getInt("AppListNums", 0);
-	            pkgName = new String[appListNums];
+	            /*pkgName = new String[appListNums];
 		        for(int i = 0; i < appListNums; i++)
 	            {
 	                pkgName[i] = appListPreference.getString("position_"+i, null);
 	                Log.d("dengtlong", "  NO."+i + " : " + pkgName[i] );
-	            }
+	            }*/
 
 		        for (ResolveInfo reInfo : resolveInfos) {  
 	        		String className = reInfo.activityInfo.name; 
@@ -369,7 +369,7 @@ OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, android.view.V
 					appInfo.setAppName((String) reInfo.loadLabel(pm));
 					Log.i("deng", "packageName_className:" + packageName + "_"+ className);
 					
-					int index = getPkgIndex(pkgName,appInfo.getName());
+					/*int index = getPkgIndex(pkgName,appInfo.getName());
 					if( index != -1 ){
 						appInfo.setAppPosition(index+1);
 						
@@ -383,10 +383,40 @@ OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, android.view.V
 					}else{
 						Log.i("deng", "======continue" );
 						continue;
+					}*/
+					int index = appListPreference.getInt(appInfo.getName(), 0);
+					int new_index = 0;
+					if(index != 0){
+						appInfo.setAppPosition(index);
+						if(appMap.get(appInfo.getName()) != null){
+							appInfo.setAppBg(getBaseContext().getResources().getDrawable(appMap.get(appInfo.getName())[2]));
+							appInfo.setAppIcon(getBaseContext().getResources().getDrawable(appMap.get(appInfo.getName())[1]));
+							Log.i("deng_add", "system index =" +index );
+						}else{
+							appInfo.setAppBg(getBaseContext().getResources().getDrawable(R.drawable.bg_gray));
+							appInfo.setAppIcon(reInfo.loadIcon(pm));
+							Log.i("deng_add", "other index =" +index );
+						}
+					}else{
+						new_index = appListNums + 1;
+						appInfo.setAppPosition(index);
+						appInfo.setAppBg(getBaseContext().getResources().getDrawable(R.drawable.bg_gray));
+						appInfo.setAppIcon(reInfo.loadIcon(pm));
+						
+						SharedPreferences.Editor editor = getSharedPreferences("AppListData", Context.MODE_PRIVATE).edit();
+						editor.putInt("AppListNums", new_index);
+						editor.putInt(appInfo.getName(),new_index);
+						editor.commit();
+						
+						Log.i("deng_add", "======package added!    new_index=" +new_index );
 					}
-					appList.add(appInfo);
-					Log.i("deng", "======package added!" );
+
+					if(!isContainAppList(appInfo)){
+						appList.add(appInfo);
+					}
+
 	        	}
+
 	        	Comparator comp = new SortComparator();
 	        	Collections.sort(appList,comp);
 	        	Log.d("dengtlong","======this1=====");
@@ -458,6 +488,15 @@ OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, android.view.V
 			mViewPager.invalidate();
 			mViewPager.setScroll(AppApplication.getDragStatus());
 			AppApplication.isMove = false;
+	}
+	
+	public static boolean isContainAppList(AppItem appItem){
+		for(AppItem item : appList){
+			if(item.getName().equals(appItem.getName())){
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	public static int getPkgIndex(String[] strs,String s){ 
@@ -610,8 +649,7 @@ OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, android.view.V
 		public void onReceive(Context context, Intent intent) {
 			if (intent.getAction().equals("android.intent.action.PACKAGE_ADDED") ||
 				intent.getAction().equals("android.intent.action.PACKAGE_REMOVED") ||
-				intent.getAction().equals("android.intent.action.ACTION_PACKAGE_CHANGED") ||
-				intent.getAction().equals("android.intent.action.ACTION_XGD_ICON_DRAG") ) {
+				intent.getAction().equals("android.intent.action.ACTION_PACKAGE_CHANGED")) {
 				Log.v("dengtl-exchangePosition","onCreateAppView  getAction is : " 
 						+ intent.getAction());
 				final String packageName = intent.getDataString().substring(8);
