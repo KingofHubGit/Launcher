@@ -27,12 +27,10 @@ public class XGDAllAppGridViewAdapter extends BaseAdapter {
 	private List<AppItem> appList;
 	private int selected = -1;
 	private LayoutInflater mInflater;
-	boolean isVisible = true;
-	private static int itemVisiblePosition = -1;
-	private static int itemVisiblePage = -1;
+	private boolean isVisible = true;
+	private static int setVisiblePosition = -1;
+	private static int setVisiblePage = -1;
 	private static int itemVisible = -1;
-	
-	private int movePosition = -1;
 	private boolean isMove = false;
 
 	public XGDAllAppGridViewAdapter(Context pContext, List<AppItem> list, int page) {
@@ -42,7 +40,7 @@ public class XGDAllAppGridViewAdapter extends BaseAdapter {
 		int pageSize = pContext.getResources().getInteger(R.integer.xgd_config_page_size);
 		int i = page * pageSize-2;
 		int end = i + pageSize;
-		//第一页只显示4个
+		
 		if(page == 0){
 			i = 0;
 			end = 4;
@@ -82,7 +80,6 @@ public class XGDAllAppGridViewAdapter extends BaseAdapter {
 		if (null == convertView) {
 			holder = new ViewHolder();
 			convertView = mInflater.inflate(R.layout.xgd_all_app_gridview_item, null);
-			//holder.itemImgBg = (LinearLayout) convertView.findViewById(R.id.all_app_grid_item_bg);
 			holder.itemBg = (ImageView) convertView.findViewById(R.id.xgd_all_app_grid_item_icon);
 			holder.itemIcon = (ImageView) convertView.findViewById(R.id.xgd_app_item_icon);
 			holder.itemTitle = (TextView) convertView.findViewById(R.id.xgd_all_app_grid_item_name);
@@ -90,30 +87,30 @@ public class XGDAllAppGridViewAdapter extends BaseAdapter {
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
+		
 		holder.itemBg.setBackground(item.getAppBg());
 		holder.itemTitle.setText(item.getAppName());
+		
 		if(item.getAppIcon() != null){
 			holder.itemIcon.setBackground(item.getAppIcon());
 		}
-		if( itemVisiblePosition == position && itemVisiblePage == currentPage ){
+		if( setVisiblePosition == position && setVisiblePage == currentPage ){
 			holder.setVisible(itemVisible);
-			Log.v("deng-Launcher","set item Visible!=======");
 		}
 		
         if( isMove) {
             holder.setVisible(View.VISIBLE);
-            Log.v("dengtl","%%%%+++++++setVisibility : " + position);
         }
         
 		if(selected == position) {		
 			Animation animation = AnimationUtils.loadAnimation(mContext,R.anim.app_item_zoomout);
 			convertView.startAnimation(animation);
-			Log.v("deng-Launcher"," selected == position done!");
+			Log.v("deng"," selected == position done!");
 		} else {
 			Animation animation = AnimationUtils.loadAnimation(mContext,R.anim.app_item_zoomin);
 			convertView.startAnimation(animation);
 		}
-		Log.v("deng-Launcher","getView()....!  position = " + position + "  convertView= " +convertView
+		Log.v("deng","getView(): position = " + position + "  convertView= " +convertView
 				+"  parent="+parent);
 		
 		return convertView;
@@ -129,7 +126,6 @@ public class XGDAllAppGridViewAdapter extends BaseAdapter {
 			itemBg.setVisibility(visible);
 			itemIcon.setVisibility(visible);
 			itemTitle.setVisibility(visible);
-			Log.v("deng-Launcher", "set Visible------");
 		}
 		
 	}
@@ -143,111 +139,38 @@ public class XGDAllAppGridViewAdapter extends BaseAdapter {
 	}
 	
 	public void setItemVisible(int visible, int page, int position){
-		itemVisiblePage = page;
-		itemVisiblePosition = position;
+		setVisiblePage = page;
+		setVisiblePosition = position;
 		itemVisible = visible;
 	}
 	
 	
 	 public void exchangePosition(int originalId, int nowId, boolean isMove) {
-	        /*T t = list.get(originalPosition);
-	        list.remove(originalPosition);
-	        list.add(nowPosition, t);
-	        movePosition = nowPosition;
-	        this.isMove = isMove;
-	        notifyDataSetChanged();*/
-		 	/*int originalId,nowId;
-		 	if( Launcher.mPageindex == 0 ){
-		 		originalId = originalPosition;
-		 		nowId = nowPosition;
-		 		Log.v("dengtl","=====7=====exchangePosition  0  original id = " + originalId);
-		 		Log.v("dengtl","=====7=====exchangePosition  0  now id = " + nowId);
-		 	}else{
-		 		originalId = (originalPosition+4+(Launcher.mPageindex -1)*6);
-		 		nowId = (nowPosition+4+(Launcher.mPageindex -1)*6);
-
-		 		Log.v("dengtl","=====7=====exchangePosition  else  original id = " + originalId);
-		 		Log.v("dengtl","=====7=====exchangePosition  else  now id = " + nowId);
-		 	}*/
-		 	
-		 	/*AppItem t = appList.get(originalId);
-		 	
-		 	Log.v("dengtl-exchangePosition"," old $$$$ Position = " + t.getAppPosition()
-		 			+" $$$$ Name = " + t.getName());
-		 	
-		 	appList.remove(originalId);
-		 	
-		 	appList.add(nowId, t);
-		 	Log.v("dengtl-exchangePosition"," new $$$$ Position = " + appList.get(nowId).getAppPosition()
-		 			+" $$$$ Name = " + appList.get(nowId).getName());
-		 	*/
-		 	//movePosition = nowId;
+	        
 		 	if(originalId < 0 || nowId < 0){
 		 		return;
 		 	}
 		 	this.isMove = isMove;
 		 	
-		 	/*if(originalId < nowId ){
-		 		for(int i = originalId ; i < nowId ; i++){
-		 			Collections.swap(appList,i,i+1);
-				 	Log.v("dengtl-exchangePosition"," old $$$$ Position = " + appList.get(originalId).getAppPosition()
-				 			+" $$$$ Name = " + appList.get(originalId).getName()
-				 			+" #### i = " + i);		 	
-				 	Log.v("dengtl-exchangePosition"," new $$$$ Position = " + appList.get(nowId).getAppPosition()
-				 			+" $$$$ Name = " + appList.get(nowId).getName()
-				 			+" #### i = " + i);
-				 	
-		 		}
-		 	}else{
-		 		for(int i = originalId ; i > nowId ; i--){
-		 			Collections.swap(appList,i,i-1);
-				 	Log.v("dengtl-exchangePosition"," old $$$$ Position = " + appList.get(originalId).getAppPosition()
-				 			+" $$$$ Name = " + appList.get(originalId).getName()
-				 			+" #### i = " + i);		 	
-				 	Log.v("dengtl-exchangePosition"," new $$$$ Position = " + appList.get(nowId).getAppPosition()
-				 			+" $$$$ Name = " + appList.get(nowId).getName()
-				 			+" #### i = " + i);
-		 		}
-		 		
-		 	}*/
 		 	AppItem t = appList.get(originalId);
 		 	appList.remove(originalId);
 		 	appList.add(nowId, t);
-		 	
-		 	
-		 	/*Collections.swap(appList,originalId,nowId);
-		 	Log.v("dengtl-exchangePosition"," old $$$$ Position = " + appList.get(originalId).getAppPosition()
-		 			+" $$$$ Name = " + appList.get(originalId).getName());		 	
-		 	Log.v("dengtl-exchangePosition"," new $$$$ Position = " + appList.get(nowId).getAppPosition()
-		 			+" $$$$ Name = " + appList.get(nowId).getName());*/
-		 	//movePosition = originalId;
-		 	//this.isMove = isMove;
-
-/*		 	SharedPreferences.Editor editor = mContext.getSharedPreferences("AppList", Context.MODE_PRIVATE).edit();
-			Gson gson = new Gson();
-			String json = gson.toJson(appList);
-			Log.d("dengtlong", "saved json is "+ json);
-			editor.putString("AppItemJson", json);
-			editor.commit();
-			Log.d("dengtlong", "saved json is done! ");*/
 		 	
 			SharedPreferences.Editor editor = mContext.getSharedPreferences("AppListData", Context.MODE_PRIVATE).edit();
 			editor.putInt("AppListNums", appList.size());
 			for (int i = 0; i < appList.size(); i++)
 			{
 			    editor.putInt(appList.get(i).getName(),(i+1));
-			    Log.d("dengtlong", "i = " + i + "  : " + appList.get(i).getName());
+			    Log.d("deng", "i = " + i + "  : " + appList.get(i).getName());
 			}
 			editor.commit();
-			Log.d("dengtlong","=========dfsf=====");
+			Log.d("deng","======drag commit=====");
 		 	
 		 	notifyDataSetChanged();
 		 	
 		 	Intent intent = new Intent();  
 		 	intent.setAction("android.intent.action.ACTION_XGD_ICON_DRAG");  
 		 	mContext.sendBroadcast(intent);  
-		 	
 	 }
-	
 
 }

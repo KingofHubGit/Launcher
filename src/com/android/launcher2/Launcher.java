@@ -158,12 +158,12 @@ OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, android.view.V
 		llFirstPage = inflater.inflate(R.layout.apps_first_page, (ViewGroup)findViewById(R.id.ll_first_app_page));       
 		
 		onCreateAppView();
+		
 		IntentFilter filter = new IntentFilter();
 		filter.addAction(Intent.ACTION_PACKAGE_ADDED);
 		filter.addAction(Intent.ACTION_PACKAGE_REMOVED);
 		filter.addAction(Intent.ACTION_PACKAGE_CHANGED);
 		filter.addDataScheme("package");
-		
 		registerReceiver(mReceiver, filter);
 		
 		IntentFilter drag_filter = new IntentFilter();
@@ -215,7 +215,6 @@ OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, android.view.V
             Log.d("[gx]","onResume ums -------------------");
             Settings.System.putInt(getContentResolver(), "status_bar_disabled", 0);
         }
-        
 		super.onResume();
 	}
 
@@ -282,113 +281,87 @@ OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, android.view.V
                 hideList.add("com.android.contacts_com.android.contacts.activities.PeopleActivity");
             }
 			
-            /*SharedPreferences preferAppList = getSharedPreferences("AppList", MODE_PRIVATE);
-            String appListJson = preferAppList.getString("AppItemJson", null);
-            if (appListJson != null)
-            {
-                Gson gson = new Gson();
-                Type type = new TypeToken<List<AppItem>>(){}.getType();
-                //List<AppItem> appListData = new ArrayList<AppItem>();
-                appList = gson.fromJson(appListJson, type);
-                for(int i = 0; i < appList.size(); i++)
-                {
-                    Log.d("dengtlong", appList.get(i).getName()+" : " 
-                    		+ appList.get(i).getAppPosition());
-                }
-            }else{
-            	Log.d("dengtlong", "saved json is null! ");
-            }*/
             SharedPreferences appListPreference = getSharedPreferences("AppListData", MODE_PRIVATE);
             int appListNums = appListPreference.getInt("AppListNums", 0);
 	        List<ResolveInfo> resolveInfos = pm.queryIntentActivities(intent, 0);  
-//        	Collections.sort(resolveInfos,new ResolveInfo.DisplayNameComparator(pm));  
-	        if (appList != null && appListNums <=0 ) {
-	        	appList.clear();  
-	        	for (ResolveInfo reInfo : resolveInfos) {  
-	        		String className = reInfo.activityInfo.name; 
-	        		String packageName = reInfo.activityInfo.packageName;
-	        		String clpaName = packageName + "_"+ className;
-					
-	        		//过滤相关包名
-	        		if(hideList.contains(clpaName)){
-	        			continue;
-	        		}
-        			AppItem appInfo = new AppItem();             		
-            		appInfo.setPackageName(packageName);
-    				appInfo.setClassName(className);
-    				appInfo.setAppName((String) reInfo.loadLabel(pm));
-//	    				appInfo.setAppIcon(reInfo.loadIcon(pm));
-    				Log.i("deng", "packageName_className:" + packageName + "_"+ className);
-    				if(appMap.get(appInfo.getName()) != null){
-    					appInfo.setAppPosition(appMap.get(appInfo.getName())[0].intValue());
-    					appInfo.setAppBg(getBaseContext().getResources().getDrawable(appMap.get(appInfo.getName())[2]));
-    					appInfo.setAppIcon(getBaseContext().getResources().getDrawable(appMap.get(appInfo.getName())[1]));
-    					systemAList.add(appInfo);
-    				}else{
-    					appInfo.setAppBg(getBaseContext().getResources().getDrawable(R.drawable.bg_gray));
-    					appInfo.setAppIcon(reInfo.loadIcon(pm));
-    					userAppList.add(appInfo);
-    				}
-	        	}
-
-//	        	sortList(systemAList);
-	        	Comparator comp = new SortComparator();
-	        	Collections.sort(systemAList,comp);
-	        	appList.addAll(systemAList);
-	        	appList.addAll(userAppList);
-	        	Log.d("dengtlong","======this0=====");
-	        	
-	        }else if(appList != null && appListNums>0 ) {
+ 
+	        if (appList != null) {
 	        	appList.clear();
-	            //SharedPreferences appListPreference = getSharedPreferences("AppListData", MODE_PRIVATE);
-	            //int appListNums = appListPreference.getInt("AppListNums", 0);
-	            /*pkgName = new String[appListNums];
-		        for(int i = 0; i < appListNums; i++)
-	            {
-	                pkgName[i] = appListPreference.getString("position_"+i, null);
-	                Log.d("dengtlong", "  NO."+i + " : " + pkgName[i] );
-	            }*/
+	        	if(appListNums <=0){
+		        	for (ResolveInfo reInfo : resolveInfos) {  
+		        		String className = reInfo.activityInfo.name; 
+		        		String packageName = reInfo.activityInfo.packageName;
+		        		String clpaName = packageName + "_"+ className;
+						
+		        		//过滤相关包名
+		        		if(hideList.contains(clpaName)){
+		        			continue;
+		        		}
+	        			AppItem appInfo = new AppItem();             		
+	            		appInfo.setPackageName(packageName);
+	    				appInfo.setClassName(className);
+	    				appInfo.setAppName((String) reInfo.loadLabel(pm));
+	
+	    				Log.i("deng", "packageName_className:" + packageName + "_"+ className);
+	    				if(appMap.get(appInfo.getName()) != null){
+	    					appInfo.setAppPosition(appMap.get(appInfo.getName())[0].intValue());
+	    					appInfo.setAppBg(getBaseContext().getResources().getDrawable(appMap.get(appInfo.getName())[2]));
+	    					appInfo.setAppIcon(getBaseContext().getResources().getDrawable(appMap.get(appInfo.getName())[1]));
+	    					systemAList.add(appInfo);
+	    				}else{
+	    					appInfo.setAppBg(getBaseContext().getResources().getDrawable(R.drawable.bg_gray));
+	    					appInfo.setAppIcon(reInfo.loadIcon(pm));
+	    					userAppList.add(appInfo);
+	    				}
+		        	}
 
-		        for (ResolveInfo reInfo : resolveInfos) {  
-	        		String className = reInfo.activityInfo.name; 
-	        		String packageName = reInfo.activityInfo.packageName;
-	        		String clpaName = packageName + "_"+ className;
-					
-	        		//过滤相关包名
-	        		if(hideList.contains(clpaName)){
-	        			continue;
-	        		}
-	    			AppItem appInfo = new AppItem();             		
-	        		appInfo.setPackageName(packageName);
-					appInfo.setClassName(className);
-					appInfo.setAppName((String) reInfo.loadLabel(pm));
-					Log.i("deng", "packageName_className:" + packageName + "_"+ className);
+		        	Comparator comp = new SortComparator();
+		        	Collections.sort(systemAList,comp);
+		        	appList.addAll(systemAList);
+		        	appList.addAll(userAppList);
+		        	Log.d("deng","======this0=====");
+		        	
+	        	}else{
+	        		for (ResolveInfo reInfo : resolveInfos) {  
+		        		String className = reInfo.activityInfo.name; 
+		        		String packageName = reInfo.activityInfo.packageName;
+		        		String clpaName = packageName + "_"+ className;
+						
+		        		if(hideList.contains(clpaName)){
+		        			continue;
+		        		}
+		        		
+		    			AppItem appInfo = new AppItem();             		
+		        		appInfo.setPackageName(packageName);
+						appInfo.setClassName(className);
+						appInfo.setAppName((String) reInfo.loadLabel(pm));
+						Log.i("deng", "packageName_className:" + packageName + "_"+ className);
 
-					int index = appListPreference.getInt(appInfo.getName(), 0);
-					int new_index = 0;
-					if(index != 0){
-						appInfo.setAppPosition(index);
-						if(appMap.get(appInfo.getName()) != null){
-							appInfo.setAppBg(getBaseContext().getResources().getDrawable(appMap.get(appInfo.getName())[2]));
-							appInfo.setAppIcon(getBaseContext().getResources().getDrawable(appMap.get(appInfo.getName())[1]));
-							Log.i("deng_add", "system index =" +index );
-						}else{
-							appInfo.setAppBg(getBaseContext().getResources().getDrawable(R.drawable.bg_gray));
-							appInfo.setAppIcon(reInfo.loadIcon(pm));
-							Log.i("deng_add", "other index =" +index );
+						int index = appListPreference.getInt(appInfo.getName(), 0);
+						int new_index = 0;
+						if(index != 0){
+							appInfo.setAppPosition(index);
+							if(appMap.get(appInfo.getName()) != null){
+								appInfo.setAppBg(getBaseContext().getResources().getDrawable(appMap.get(appInfo.getName())[2]));
+								appInfo.setAppIcon(getBaseContext().getResources().getDrawable(appMap.get(appInfo.getName())[1]));
+								Log.i("deng", "system index =" +index );
+							}else{
+								appInfo.setAppBg(getBaseContext().getResources().getDrawable(R.drawable.bg_gray));
+								appInfo.setAppIcon(reInfo.loadIcon(pm));
+								Log.i("deng", "other index =" +index );
+							}
 						}
-						Log.d("deng_delete","======this###=====");
-					}
 
-					if(!isContainAppList(appInfo)){
-						appList.add(appInfo);
-					}
-
+						if(!isContainAppList(appInfo)){
+							appList.add(appInfo);
+						}
+		        	}
+	        		
+		        	Comparator comp = new SortComparator();
+		        	Collections.sort(appList,comp);
+		        	Log.d("deng","======this1=====");
 	        	}
-
-	        	Comparator comp = new SortComparator();
-	        	Collections.sort(appList,comp);
-	        	Log.d("dengtlong","======this1=====");
+	        	
 	        }
 	        
 	        int pageSize = getResources().getInteger(R.integer.xgd_config_page_size);
@@ -455,7 +428,7 @@ OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, android.view.V
 			mViewPager.setAdapter(adapter);
 			mViewPager.setCurrentItem(mPageindex);
 			mViewPager.invalidate();
-			mViewPager.setScroll(AppApplication.getDragStatus());
+			mViewPager.setScroll(true);
 	}
 	
 	public static boolean isContainAppList(AppItem appItem){
@@ -466,16 +439,6 @@ OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, android.view.V
 		}
 		return false;
 	}
-	
-	public static int getPkgIndex(String[] strs,String s){ 
-		
-		for(int i=0;i<strs.length;i++){ 
-			if(strs[i].equals(s)){
-				return i;
-			} 
-		} 
-		return -1;
-	} 
 	
 	public class SortComparator implements Comparator {  
 	    @Override  
@@ -489,7 +452,7 @@ OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, android.view.V
 	
 	@Override
 	public void onPageScrollStateChanged(int arg0) {
-		AppApplication.setCurrentPager(mViewPager.getCurrentItem());
+		
 	}
 
 	@Override
@@ -600,13 +563,12 @@ OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, android.view.V
 	  dialogBuilder.setTitle("卸载");
 	  dialogBuilder.setMessage(str);
 	  dialogBuilder.setPositiveButton("确定", new OnClickListener() {
-		
-		@Override
-		public void onClick(DialogInterface dialog, int which) {
-			uninstall(packageName);
-			
-		}
-	});
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				uninstall(packageName);
+			}
+	  	});
+	  	
 	  dialogBuilder.setNegativeButton("取消", null);
 	  dialogBuilder.create();
 	  dialogBuilder.show();
@@ -622,7 +584,6 @@ OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, android.view.V
     		String className = reInfo.activityInfo.name; 
     		String packageName = reInfo.activityInfo.packageName;
     		String clpaName = packageName + "_"+ className;
-    		Log.d("deng_delete", " all pkgName is : " +clpaName);
     		
     		if(packageName.equals(pkgName)){
     			SharedPreferences.Editor editor = getSharedPreferences("AppListData", Context.MODE_PRIVATE).edit();
@@ -630,7 +591,6 @@ OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, android.view.V
     			int appListNums = appListPreference.getInt("AppListNums", 0);
     			editor.putInt("AppListNums",appListNums+1);
     			editor.putInt(clpaName,appListNums+1);
-    			Log.d("deng_delete", " add pkgName is : " +clpaName);
     			editor.commit();
     		}
 		}
@@ -642,14 +602,15 @@ OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, android.view.V
 			if (intent.getAction().equals("android.intent.action.PACKAGE_ADDED") ||
 				intent.getAction().equals("android.intent.action.PACKAGE_REMOVED") ||
 				intent.getAction().equals("android.intent.action.ACTION_PACKAGE_CHANGED")) {
-				Log.v("dengtl-exchangePosition","onCreateAppView  getAction is : " 
-						+ intent.getAction());
+				Log.v("deng","onCreateAppView  getAction is : " + intent.getAction());
+				
 				final String packageName = intent.getDataString().substring(8);
 				Log.d("AllAppActivity", intent.getAction() + packageName);
 				
 				if(intent.getAction().equals("android.intent.action.PACKAGE_ADDED")){
 					setPackageOrder(packageName);
-					Log.d("deng_delete", " receive broadcast PACKAGE_ADDED ! ");
+					Log.d("deng", " receive broadcast PACKAGE_ADDED !   packages is : " 
+							+ packageName);
 				}
 				
 				onCreateAppView();
@@ -661,7 +622,7 @@ OnItemSelectedListener, OnItemClickListener,OnPageChangeListener, android.view.V
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			if (intent.getAction().equals("android.intent.action.ACTION_XGD_ICON_DRAG")) {
-				Log.v("dengtl-exchangePosition","onCreateAppView  getAction is : " 
+				Log.v("deng","onCreateAppView  getAction is : " 
 						+ intent.getAction());
 				onCreateAppView();
 			}

@@ -10,7 +10,6 @@ public class AppApplication extends Application {
 
 	@Override
 	public void onCreate() {
-		// TODO Auto-generated method stub
 		super.onCreate();
 		mAppApplication = this;
 	}
@@ -30,15 +29,6 @@ public class AppApplication extends Application {
 	
 	public static int getCurrentPager(){
 		return mPageindex;
-	}
-	
-	public static void setDragStatus(boolean is_drag){
-		isDrag = is_drag;
-		Log.v("deng-launcher","#####set isDrag : " + isDrag);
-	}	
-	
-	public static boolean getDragStatus(){
-		return isDrag;
 	}
 	
 }
